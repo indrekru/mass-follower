@@ -7,7 +7,7 @@ This is a server-side twitter mass-follower + unfollower.
 It will follow bunch of people and then unfollow the ones you already have been following for at least 2 days.
 If this thing runs every day, ideally your follower amount should grow.
 
-It keeps track of followed/unfollowed users via HSQLDB local file storage database. Make sure the app can create a directory named `db` and create/modify files inside it.
+It keeps track of followed/unfollowed users via HSQLDB local file storage database. Make sure the app can create a directory named `db` in the root directory and create/modify files inside it.
 
 ## Getting Started
 
