@@ -5,7 +5,12 @@ import com.ruubel.massfollow.service.UnfollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Component
 public class FollowJob {
@@ -21,17 +26,26 @@ public class FollowJob {
         this.unfollowService = unfollowService;
     }
 
+    @Scheduled(cron = "0 55 23 * * ?")
     public void execute() {
 
-        // 1. Follow a bunch of users until you get a 403 from rate limiting
-        String account = "BillGates";
+        List<String> accounts = new ArrayList<String>(){{
+            add("airbnb");
+            add("santanderuk");
+            add("HSBC");
+            add("AskLloydsBank");
+            add("monzo");
+        }};
+
+        Random random = new Random();
+        String account = accounts.get(random.nextInt(accounts.size()));
+
         log.info(String.format("Start following '%s'", account));
         followService.execute(account);
 
-        // 2. Unfollow a bunch of users you are currently following
         log.info("Unfollowing...");
         unfollowService.execute();
 
-        log.info("All done for today");
+        log.info("Finished unfollowing, done for today");
     }
 }
