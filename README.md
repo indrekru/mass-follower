@@ -1,6 +1,8 @@
 # Mass follower
 [![CircleCI](https://circleci.com/gh/indrekru/mass-follower.svg?style=svg&circle-token=511cd6b194fb4557acab2a962d87df04ce5dcb37)](https://circleci.com/gh/indrekru/mass-follower)
 
+![Mass follow](img.png "Mass follow")
+
 This is a server-side twitter mass-follower + unfollower.
 It will follow bunch of people and then unfollow the ones you already have been following for at least 2 days.
 If this thing runs every day, ideally your follower amount should grow.
