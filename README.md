@@ -1,7 +1,7 @@
 # Mass follower
 [![CircleCI](https://circleci.com/gh/indrekru/mass-follower.svg?style=svg&circle-token=511cd6b194fb4557acab2a962d87df04ce5dcb37)](https://circleci.com/gh/indrekru/mass-follower)
 
-<img src="https://raw.githubusercontent.com/indrekru/mass-follower/master/img.png?token=AMA2UVA5cDfFi5n8qqvgaLHJw-5voZ6Cks5cctHRwA%3D%3D" width="200px">
+<img src="https://raw.githubusercontent.com/indrekru/mass-follower/master/img.png" width="200px">
 
 This is a server-side twitter mass-follower + unfollower.
 It will follow bunch of people and then unfollow the ones you already have been following for at least 2 days.
