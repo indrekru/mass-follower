@@ -99,7 +99,6 @@ public class FollowService extends AbstractFollowService {
         List<RawProfileCard> out = new ArrayList<>();
         Elements profileCards = parent.select("div.ProfileCard.js-actionable-user");
         for (Element profileCard : profileCards) {
-            // Ignore if this is looking up your own followings
             Elements bio = profileCard.select("p.ProfileCard-bio");
             if (bio.size() == 0) {
                 log.info("No bio, skip");
