@@ -46,6 +46,6 @@ public class FollowJob {
         log.info("Unfollowing...");
         unfollowService.execute();
 
-        log.info("Finished unfollowing, done for today");
+        log.info("Finished, done for today");
     }
 }
