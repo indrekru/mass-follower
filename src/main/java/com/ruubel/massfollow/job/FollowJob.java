@@ -27,19 +27,15 @@ public class FollowJob {
 
     public void execute() {
 
-        List<String> accounts = new ArrayList<String>(){{
-            add("AskLloydsBank");
-        }};
-
-        Random random = new Random();
-        String account = accounts.get(random.nextInt(accounts.size()));
-
+        // 1. Follow a bunch of users until you get a 403 from rate limiting
+        String account = "BillGates";
         log.info(String.format("Start following '%s'", account));
         followService.execute(account);
 
+        // 2. Unfollow a bunch of users you are currently following
         log.info("Unfollowing...");
         unfollowService.execute();
 
-        log.info("Finished unfollowing, done for today");
+        log.info("All done for today");
     }
 }
