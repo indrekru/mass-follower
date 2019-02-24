@@ -90,6 +90,7 @@ And now if all went well, watch the terminal spit out logs as it's doing its mag
 * [Spring Boot](https://spring.io/projects/spring-boot) - Spring Boot 2
 * [Spock](http://spockframework.org/) - Spock testing framework
 * [Maven](https://maven.apache.org/) - Dependency Management
+* [HSQLDB](http://hsqldb.org/) - Local file storage database
 
 ## Contributing
 
