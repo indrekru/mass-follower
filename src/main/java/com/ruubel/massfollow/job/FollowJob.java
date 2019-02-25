@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Component
 public class FollowJob {
@@ -19,6 +17,8 @@ public class FollowJob {
     private FollowService followService;
     private UnfollowService unfollowService;
 
+    private static final String UNFOLLOW_TIMES = "unfollowTimes";
+
     @Autowired
     public FollowJob(FollowService followService, UnfollowService unfollowService) {
         this.followService = followService;
@@ -27,17 +27,34 @@ public class FollowJob {
 
 //    @Scheduled(cron = "0 55 23 * * ?")
     public void execute() {
+        // Initial state
+        Map<String, Integer> state = new HashMap<String, Integer>(){{
+            put(UNFOLLOW_TIMES, 0);
+        }};
+        doLogic(state);
+        log.info("Finished, done for today");
+    }
+
+    private void doLogic(Map<String, Integer> state) {
         int currentlyFollowing = followService.getCurrentlyFollowing();
         if (currentlyFollowing < 3500) {
             log.info("Do following first");
             doFollows();
-            doUnfollows();
+            if (state.get(UNFOLLOW_TIMES) == 0) {
+                // Hasn't unfollowed yet
+                log.info("Doing unfollows, haven't done them yet");
+                doUnfollows();
+            }
         } else {
             log.info("Do unfollowing first");
+            if (state.get(UNFOLLOW_TIMES) > 0) {
+                log.info("Have done unfollows already, quit");
+                return;
+            }
             doUnfollows();
-            doFollows();
+            state.put(UNFOLLOW_TIMES, state.get(UNFOLLOW_TIMES) + 1);
+            doLogic(state);
         }
-        log.info("Finished, done for today");
     }
 
     private void doFollows() {
