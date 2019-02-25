@@ -5,7 +5,6 @@ import com.ruubel.massfollow.service.UnfollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,15 +25,28 @@ public class FollowJob {
         this.unfollowService = unfollowService;
     }
 
-    @Scheduled(cron = "0 55 23 * * ?")
+//    @Scheduled(cron = "0 55 23 * * ?")
     public void execute() {
+        int currentlyFollowing = followService.getCurrentlyFollowing();
+        if (currentlyFollowing < 3500) {
+            log.info("Do following first");
+            doFollows();
+            doUnfollows();
+        } else {
+            log.info("Do unfollowing first");
+            doUnfollows();
+            doFollows();
+        }
+        log.info("Finished, done for today");
+    }
 
+    private void doFollows() {
         List<String> accounts = new ArrayList<String>(){{
             add("airbnb");
             add("santanderuk");
             add("HSBC");
             add("AskLloydsBank");
-            add("monzo");
+            add("WesternUnion");
         }};
 
         Random random = new Random();
@@ -42,10 +54,11 @@ public class FollowJob {
 
         log.info(String.format("Start following '%s'", account));
         followService.execute(account);
-
-        log.info("Unfollowing...");
-        unfollowService.execute();
-
-        log.info("Finished, done for today");
     }
+
+    private void doUnfollows() {
+        log.info("Start unfollowing");
+        unfollowService.execute();
+    }
+
 }

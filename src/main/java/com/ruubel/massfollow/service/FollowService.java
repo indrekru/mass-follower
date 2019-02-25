@@ -2,9 +2,12 @@ package com.ruubel.massfollow.service;
 
 import com.ruubel.massfollow.model.Followed;
 import com.ruubel.massfollow.service.http.HttpRequestService;
+import com.ruubel.massfollow.service.http.HttpResponse;
 import com.ruubel.massfollow.util.RawProfileCard;
 import org.json.JSONObject;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FollowService extends AbstractFollowService {
@@ -21,13 +26,17 @@ public class FollowService extends AbstractFollowService {
 
     private double waitBetweenFollowsSeconds = 1.5;
 
+    private String homeAccount;
+
     @Autowired
     public FollowService(
             FollowPersistenceService followPersistenceService,
             HeaderService headerService,
-            HttpRequestService httpRequestService) {
+            HttpRequestService httpRequestService) throws Exception {
         super(headerService, httpRequestService);
         this.followPersistenceService = followPersistenceService;
+        homeAccount = Optional.ofNullable(System.getenv("TWITTER_HOME_ACCOUNT_NAME")).orElseThrow(
+                () -> new Exception("TWITTER_HOME_ACCOUNT_NAME is not set in the environment"));
     }
 
     public void execute(String account) {
@@ -76,7 +85,20 @@ public class FollowService extends AbstractFollowService {
                 e.printStackTrace();
             }
         }
-        log.info("Finished following");
+    }
+
+    public int getCurrentlyFollowing() {
+        HttpResponse response = httpRequestService.exchange(
+                String.format("https://twitter.com/%s", homeAccount),
+                Connection.Method.GET,
+                new HttpHeaders(),
+                new HashMap<>());
+
+        Document parsed = Jsoup.parse(response.getBody());
+        Elements numberElements = parsed.select("span.ProfileNav-value");
+        Element followingElement = numberElements.get(1);
+        String followingCountStr = followingElement.attr("data-count");
+        return Integer.parseInt(followingCountStr);
     }
 
     protected JSONObject getNextAccountFollowersBatchJson(String account, String minPosition) {
