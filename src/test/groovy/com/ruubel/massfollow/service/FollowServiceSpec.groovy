@@ -1,5 +1,6 @@
 package com.ruubel.massfollow.service
 
+import com.ruubel.massfollow.config.ConfigParams
 import com.ruubel.massfollow.service.http.HttpRequestService
 import com.ruubel.massfollow.service.http.HttpResponse
 import org.jsoup.Connection
@@ -11,12 +12,14 @@ class FollowServiceSpec extends Specification {
     FollowPersistenceService followedService
     HttpRequestService httpRequestService
     HeaderService headersService
+    ConfigParams configParams
 
     def setup () {
         followedService = Mock(FollowPersistenceService)
         headersService = Mock(HeaderService)
         httpRequestService = Mock(HttpRequestService)
-        service = new FollowService(followedService, headersService, httpRequestService)
+        configParams = Mock(ConfigParams)
+        service = new FollowService(followedService, headersService, httpRequestService, configParams)
     }
 
     def "when requesting followActionRequestParams, then returns well-defined essential params" () {

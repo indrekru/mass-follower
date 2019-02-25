@@ -1,5 +1,6 @@
 package com.ruubel.massfollow.service
 
+import com.ruubel.massfollow.config.ConfigParams
 import com.ruubel.massfollow.model.Followed
 import com.ruubel.massfollow.service.http.HttpRequestService
 import spock.lang.Specification
@@ -12,12 +13,14 @@ class UnfollowServiceSpec extends Specification {
     FollowPersistenceService followedService
     HttpRequestService httpRequestService
     HeaderService headersService
+    ConfigParams configParams
 
     def setup () {
         followedService = Mock(FollowPersistenceService)
         headersService = Mock(HeaderService)
         httpRequestService = Mock(HttpRequestService)
-        service = new UnfollowService(followedService, headersService, httpRequestService)
+        configParams = Mock(ConfigParams)
+        service = new UnfollowService(followedService, headersService, httpRequestService, configParams)
     }
 
     def "when followed is null, then shouldUnfollow returns false" () {

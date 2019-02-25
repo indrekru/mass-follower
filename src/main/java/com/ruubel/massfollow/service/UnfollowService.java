@@ -1,5 +1,6 @@
 package com.ruubel.massfollow.service;
 
+import com.ruubel.massfollow.config.ConfigParams;
 import com.ruubel.massfollow.model.Followed;
 import com.ruubel.massfollow.service.http.HttpRequestService;
 import com.ruubel.massfollow.util.RawProfileCard;
@@ -15,27 +16,25 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UnfollowService extends AbstractFollowService {
 
     private FollowPersistenceService followPersistenceService;
+    private ConfigParams configParams;
 
     private double waitBetweenUnfollowsSeconds = 1;
     private double waitBetweenNextPageFetchSeconds = 0.1;
-
-    private String homeAccount;
 
     @Autowired
     public UnfollowService(
             FollowPersistenceService followPersistenceService,
             HeaderService headerService,
-            HttpRequestService httpRequestService) throws Exception {
+            HttpRequestService httpRequestService,
+            ConfigParams configParams) {
         super(headerService, httpRequestService);
         this.followPersistenceService = followPersistenceService;
-        homeAccount = Optional.ofNullable(System.getenv("TWITTER_HOME_ACCOUNT_NAME")).orElseThrow(
-                () -> new Exception("TWITTER_HOME_ACCOUNT_NAME is not set in the environment"));
+        this.configParams = configParams;
     }
 
     public void execute() {
@@ -58,7 +57,7 @@ public class UnfollowService extends AbstractFollowService {
 
         while (minPosition != null && hasNextBatch) {
             log.info("Fetching next batch for " + minPosition);
-            JSONObject nextBatchJson = getNextHomeFollowersBatchJson(homeAccount, minPosition);
+            JSONObject nextBatchJson = getNextHomeFollowersBatchJson(configParams.getHomeAccount(), minPosition);
             if (nextBatchJson == null) {
                 // Probably 429 - Too many requests
                 return;

@@ -1,34 +1,29 @@
 package com.ruubel.massfollow.service;
 
+import com.ruubel.massfollow.config.ConfigParams;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class HeaderService {
 
     @Value("${browser.user.agent}")
     protected String userAgent;
-    protected String authorizationToken;
-    protected String csrfToken;
-    protected String cookie;
 
-    public HeaderService() throws Exception {
-        authorizationToken = Optional.ofNullable(System.getenv("TWITTER_BEARER_TOKEN")).orElseThrow(
-                () -> new Exception("TWITTER_BEARER_TOKEN is not set in the environment"));
-        csrfToken = Optional.ofNullable(System.getenv("TWITTER_CSRF_TOKEN")).orElseThrow(
-                () -> new Exception("TWITTER_CSRF_TOKEN is not set in the environment"));
-        cookie = Optional.ofNullable(System.getenv("TWITTER_COOKIE")).orElseThrow(
-                () -> new Exception("TWITTER_COOKIE is not set in the environment"));
+    private ConfigParams configParams;
+
+    @Autowired
+    public HeaderService(ConfigParams configParams) {
+        this.configParams = configParams;
     }
 
     private HttpHeaders getCommonHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("authority", "twitter.com");
         headers.set("user-agent", userAgent);
-        headers.set("cookie", cookie);
+        headers.set("cookie", configParams.getCookie());
         headers.set("accept-language", "en-GB,en-US;q=0.9,en;q=0.8");
         headers.set("accept-encoding", "gzip, deflate, br");
         return headers;
@@ -81,8 +76,8 @@ public class HeaderService {
         headers.set("authority", "api.twitter.com");
         headers.set("dnt", "1");
         headers.set("cache-control", "no-cache");
-        headers.set("x-csrf-token", csrfToken);
-        headers.set("authorization", authorizationToken);
+        headers.set("x-csrf-token", configParams.getCsrfToken());
+        headers.set("authorization", configParams.getAuthorizationToken());
         return headers;
     }
 

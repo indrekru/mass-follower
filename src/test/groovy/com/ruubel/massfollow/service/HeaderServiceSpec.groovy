@@ -1,16 +1,19 @@
 package com.ruubel.massfollow.service
 
+import com.ruubel.massfollow.config.ConfigParams
 import org.springframework.http.HttpHeaders
 import spock.lang.Specification
 
 class HeaderServiceSpec extends Specification {
 
     HeaderService service
+    ConfigParams configParams
 
     private String ACCOUNT = "account_name"
 
     def setup () {
-        service = new HeaderService()
+        configParams = Mock(ConfigParams)
+        service = new HeaderService(configParams)
     }
 
     def "when requesting homeFollowingPageHtmlHeaders, then returns well-defined essential headers" () {

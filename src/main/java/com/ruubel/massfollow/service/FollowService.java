@@ -1,5 +1,6 @@
 package com.ruubel.massfollow.service;
 
+import com.ruubel.massfollow.config.ConfigParams;
 import com.ruubel.massfollow.model.Followed;
 import com.ruubel.massfollow.service.http.HttpRequestService;
 import com.ruubel.massfollow.service.http.HttpResponse;
@@ -17,26 +18,24 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FollowService extends AbstractFollowService {
 
     private FollowPersistenceService followPersistenceService;
+    private ConfigParams configParams;
 
     private double waitBetweenFollowsSeconds = 1.5;
-
-    private String homeAccount;
 
     @Autowired
     public FollowService(
             FollowPersistenceService followPersistenceService,
             HeaderService headerService,
-            HttpRequestService httpRequestService) throws Exception {
+            HttpRequestService httpRequestService,
+            ConfigParams configParams) {
         super(headerService, httpRequestService);
         this.followPersistenceService = followPersistenceService;
-        homeAccount = Optional.ofNullable(System.getenv("TWITTER_HOME_ACCOUNT_NAME")).orElseThrow(
-                () -> new Exception("TWITTER_HOME_ACCOUNT_NAME is not set in the environment"));
+        this.configParams = configParams;
     }
 
     public void execute(String account) {
@@ -89,7 +88,7 @@ public class FollowService extends AbstractFollowService {
 
     public int getCurrentlyFollowing() {
         HttpResponse response = httpRequestService.exchange(
-                String.format("https://twitter.com/%s", homeAccount),
+                String.format("https://twitter.com/%s", configParams.getHomeAccount()),
                 Connection.Method.GET,
                 new HttpHeaders(),
                 new HashMap<>());
