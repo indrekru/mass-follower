@@ -17,8 +17,6 @@ public class FollowJob {
     private FollowService followService;
     private UnfollowService unfollowService;
 
-    private static final String UNFOLLOW_TIMES = "unfollowTimes";
-
     @Autowired
     public FollowJob(FollowService followService, UnfollowService unfollowService) {
         this.followService = followService;
@@ -28,32 +26,28 @@ public class FollowJob {
 //    @Scheduled(cron = "0 55 23 * * ?")
     public void execute() {
         // Initial state
-        Map<String, Integer> state = new HashMap<String, Integer>(){{
-            put(UNFOLLOW_TIMES, 0);
-        }};
-        doLogic(state);
+        doLogic(0);
         log.info("Finished, done for today");
     }
 
-    private void doLogic(Map<String, Integer> state) {
+    private void doLogic(int unfollowTimes) {
         int currentlyFollowing = followService.getCurrentlyFollowing();
         if (currentlyFollowing < 3500) {
             log.info("Do following first");
             doFollows();
-            if (state.get(UNFOLLOW_TIMES) == 0) {
+            if (unfollowTimes == 0) {
                 // Hasn't unfollowed yet
                 log.info("Doing unfollows, haven't done them yet");
                 doUnfollows();
             }
         } else {
             log.info("Do unfollowing first");
-            if (state.get(UNFOLLOW_TIMES) > 0) {
+            if (unfollowTimes > 0) {
                 log.info("Have done unfollows already, quit");
                 return;
             }
             doUnfollows();
-            state.put(UNFOLLOW_TIMES, state.get(UNFOLLOW_TIMES) + 1);
-            doLogic(state);
+            doLogic(unfollowTimes + 1);
         }
     }
 
