@@ -1,5 +1,5 @@
 # Twitter mass follow
-[![CircleCI](https://circleci.com/gh/indrekru/mass-follower.svg?style=svg&circle-token=511cd6b194fb4557acab2a962d87df04ce5dcb37)](https://circleci.com/gh/indrekru/mass-follower)
+[![CircleCI](https://circleci.com/gh/indrekru/twitter-mass-follow.svg?style=svg)](https://circleci.com/gh/indrekru/twitter-mass-follow)
 
 <img src="https://raw.githubusercontent.com/indrekru/mass-follower/master/img.png" width="200px">
 
@@ -17,7 +17,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone the project to your local environment:
     ```
-    git clone https://github.com/indrekru/mass-follower.git
+    git clone https://github.com/indrekru/twitter-mass-follow.git
     ```
 
 2. You need to define environment variables in your
