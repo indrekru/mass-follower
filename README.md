@@ -3,9 +3,9 @@
 
 <img src="https://raw.githubusercontent.com/indrekru/mass-follower/master/img.png" width="200px">
 
-This is a server-side twitter mass-follower + unfollower.
-It will follow bunch of people and then unfollow the ones you already have been following for at least 2 days.
-If this thing runs every day, ideally your follower amount should grow.
+This is a server-side twitter mass-follower + unfollower. It uses a scheduler and runs once every 24 hours, it runs as long as Twitter restrictions (rate limiting) for the day kick in, so it'll wait a day and do it again.
+It will decide either to follow or unfollow a bunch of people, depending how many you are currently following. It unfollows people that have been followed for at least 2 days. It always needs to keep your current following number under 5000, otherwise - Twitter restrictions kick in.
+If this thing runs on a scheduler every day, ideally your follower amount should grow.
 
 It keeps track of followed/unfollowed users via HSQLDB local file storage database. Make sure the app can create a directory named `db` in the root directory and create/modify files inside it.
 
