@@ -20,12 +20,12 @@ These instructions will get you a copy of the project up and running on your loc
     git clone https://github.com/indrekru/twitter-mass-follow.git
     ```
 
-2. You need to define environment variables like this:
+2. You need to define environment variables:
    ```
-   export TWITTER_HOME_ACCOUNT_NAME='[HOME_ACCOUNT_NAME]'
-   export TWITTER_BEARER_TOKEN='[BEARER_TOKEN]'
-   export TWITTER_CSRF_TOKEN='[CSRF_TOKEN]'
-   export TWITTER_COOKIE='[COOKIE]'
+   TWITTER_HOME_ACCOUNT_NAME
+   TWITTER_BEARER_TOKEN
+   TWITTER_CSRF_TOKEN
+   TWITTER_COOKIE
    ```
    
    #### Where to find these values
