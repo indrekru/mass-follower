@@ -95,6 +95,9 @@ abstract class AbstractFollowService {
             } else {
                 return false;
             }
+        } else if (statusCode == 500) {
+            // Failed connecting
+            return false;
         } else {
             return true;
         }

@@ -31,9 +31,10 @@ public class HttpRequestService {
                     .ignoreHttpErrors(true)
                     .execute();
         } catch (Exception e) {
+            log.info("Exception type: " + e.getClass());
             log.warn(String.format("Failed calling: '%s'", url));
         }
-        return new HttpResponse(response.statusCode(), response.body());
+        return new HttpResponse(response == null ? 500 : response.statusCode(), response == null ? "exception" : response.body());
     }
 
 }
