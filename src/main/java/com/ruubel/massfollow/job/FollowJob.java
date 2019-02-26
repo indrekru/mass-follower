@@ -5,6 +5,7 @@ import com.ruubel.massfollow.service.UnfollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -23,7 +24,7 @@ public class FollowJob {
         this.unfollowService = unfollowService;
     }
 
-//    @Scheduled(cron = "0 55 23 * * ?")
+    @Scheduled(cron = "0 55 23 * * ?")
     public void execute() {
         // Initial state
         doLogic(0);
