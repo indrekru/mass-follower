@@ -38,15 +38,11 @@ public class UnfollowService extends AbstractFollowService {
     }
 
     public void execute() {
-
         Element body = getHomeFollowersPageHtml();
-
         String minPosition = extractMinPositionFromHtml(body);
 
         List<RawProfileCard> rawProfileCards = extractProfileCardsFromHtml(body);
-
         log.info("First batch size: " + rawProfileCards.size());
-        log.info(rawProfileCards.toString());
 
         boolean success = unfollow(rawProfileCards);
         if (!success) {
@@ -78,11 +74,7 @@ public class UnfollowService extends AbstractFollowService {
                 hasNextBatch = false;
             }
 
-            try {
-                Thread.sleep((long)(waitBetweenNextPageFetchSeconds * 1000.0));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(waitBetweenNextPageFetchSeconds);
         }
 
     }
@@ -152,11 +144,7 @@ public class UnfollowService extends AbstractFollowService {
             log.warn("Failed unfollow. Abort");
             return false;
         }
-        try {
-            Thread.sleep((long)(waitBetweenUnfollowsSeconds * 1000.0));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(waitBetweenUnfollowsSeconds);
         return true;
     }
 

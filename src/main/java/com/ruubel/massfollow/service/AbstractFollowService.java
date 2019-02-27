@@ -154,4 +154,12 @@ abstract class AbstractFollowService {
         );
     }
 
+    protected void sleep(double seconds) {
+        try {
+            Thread.sleep((long)(seconds * 1000.0));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

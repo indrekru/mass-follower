@@ -39,12 +39,10 @@ public class FollowService extends AbstractFollowService {
     }
 
     public void execute(String account) {
-
         Element body = getAccountFollowersPageHtml(account);
         String minPosition = extractMinPositionFromHtml(body);
 
         List<RawProfileCard> rawProfileCards = extractProfileCardsFromHtml(body);
-
         log.info("First batch size: " + rawProfileCards.size());
 
         boolean success = follow(rawProfileCards);
@@ -71,11 +69,7 @@ public class FollowService extends AbstractFollowService {
                 return;
             }
 
-            try {
-                Thread.sleep((long)(waitBetweenNextPageFetchSeconds * 1000.0));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(waitBetweenNextPageFetchSeconds);
         }
     }
 
@@ -149,11 +143,7 @@ public class FollowService extends AbstractFollowService {
             log.warn("Failed follow. Abort");
             return false;
         }
-        try {
-            Thread.sleep((long)(waitBetweenFollowsSeconds * 1000.0));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(waitBetweenFollowsSeconds);
         return true;
     }
 
