@@ -53,6 +53,7 @@ public class UnfollowService extends AbstractFollowService {
 
         while (minPosition != null && hasNextBatch) {
             log.info("Fetching next batch for " + minPosition);
+
             JSONObject nextBatchJson = getNextHomeFollowersBatchJson(configParams.getHomeAccount(), minPosition);
             if (nextBatchJson == null) {
                 // Probably 429 - Too many requests

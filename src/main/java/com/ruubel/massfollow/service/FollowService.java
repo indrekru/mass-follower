@@ -52,6 +52,7 @@ public class FollowService extends AbstractFollowService {
 
         while (minPosition != null) {
             log.info("Fetching next batch for " + minPosition);
+
             JSONObject nextBatchJson = getNextAccountFollowersBatchJson(account, minPosition);
             if (nextBatchJson == null) {
                 // Probably 429 - Too many requests
