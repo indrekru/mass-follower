@@ -100,6 +100,7 @@ public class FollowService extends AbstractFollowService {
             String followingCountStr = followingElement.attr("data-count");
             return Integer.parseInt(followingCountStr);
         }
+        log.warn("Failed to fetch the HTML for following");
         return 0;
     }
 
