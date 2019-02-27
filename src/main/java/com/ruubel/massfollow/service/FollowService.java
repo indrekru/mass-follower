@@ -50,7 +50,9 @@ public class FollowService extends AbstractFollowService {
             return;
         }
 
-        while (minPosition != null) {
+        boolean hasNextBatch = true;
+
+        while (minPosition != null && hasNextBatch) {
             log.info("Fetching next batch for " + minPosition);
 
             JSONObject nextBatchJson = getNextAccountFollowersBatchJson(account, minPosition);
@@ -68,6 +70,10 @@ public class FollowService extends AbstractFollowService {
             success = follow(rawProfileCards);
             if (!success) {
                 return;
+            }
+
+            if (rawProfileCards.size() == 0) {
+                hasNextBatch = false;
             }
 
             sleep(waitBetweenNextPageFetchSeconds);
