@@ -22,7 +22,7 @@ public class UnfollowService extends AbstractFollowService {
     private FollowPersistenceService followPersistenceService;
     private ConfigParams configParams;
 
-    private double waitBetweenUnfollowsSeconds = 1;
+    private double waitBetweenUnfollowsSeconds = 0.1;
     private double waitBetweenNextPageFetchSeconds = 0.1;
 
     @Autowired
