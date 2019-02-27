@@ -2,6 +2,7 @@ package com.ruubel.massfollow.service;
 
 import com.ruubel.massfollow.service.http.HttpRequestService;
 import com.ruubel.massfollow.service.http.HttpResponse;
+import com.ruubel.massfollow.util.RawProfileCard;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -13,16 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-abstract class AbstractFollowService {
+abstract class AbstractFollowService implements FollowStrategy {
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     protected HeaderService headerService;
     protected HttpRequestService httpRequestService;
-
-    protected double waitBetweenNextPageFetchSeconds = 1;
 
     public AbstractFollowService(
             HeaderService headerService,
@@ -159,6 +159,48 @@ abstract class AbstractFollowService {
             Thread.sleep((long)(seconds * 1000.0));
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    protected void execute(String account, double waitBetweenNextPageFetchSeconds) {
+        Element body = getAccountFollowersPageHtml(account);
+        String minPosition = extractMinPositionFromHtml(body);
+
+        List<RawProfileCard> rawProfileCards = extractProfileCardsFromHtml(body);
+        log.info("First batch size: " + rawProfileCards.size());
+
+        boolean success = followList(rawProfileCards);
+        if (!success) {
+            return;
+        }
+
+        boolean hasNextBatch = true;
+
+        while (minPosition != null && hasNextBatch) {
+            log.info("Fetching next batch for " + minPosition);
+
+            JSONObject nextBatchJson = getNextAccountFollowersBatchJson(account, minPosition);
+            if (nextBatchJson == null) {
+                // Probably 429 - Too many requests
+                return;
+            }
+            minPosition = extractMinPositionFromJson(nextBatchJson);
+
+            body = extractHtmlFromJson(nextBatchJson);
+
+            rawProfileCards = extractProfileCardsFromHtml(body);
+            log.info("Next batch size: " + rawProfileCards.size());
+
+            success = followList(rawProfileCards);
+            if (!success) {
+                return;
+            }
+
+            if (rawProfileCards.size() == 0) {
+                hasNextBatch = false;
+            }
+
+            sleep(waitBetweenNextPageFetchSeconds);
         }
     }
 

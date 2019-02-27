@@ -5,7 +5,6 @@ import com.ruubel.massfollow.model.Followed;
 import com.ruubel.massfollow.service.http.HttpRequestService;
 import com.ruubel.massfollow.util.RawProfileCard;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,49 +37,10 @@ public class UnfollowService extends AbstractFollowService {
     }
 
     public void execute() {
-        Element body = getHomeFollowersPageHtml();
-        String minPosition = extractMinPositionFromHtml(body);
-
-        List<RawProfileCard> rawProfileCards = extractProfileCardsFromHtml(body);
-        log.info("First batch size: " + rawProfileCards.size());
-
-        boolean success = unfollow(rawProfileCards);
-        if (!success) {
-            return;
-        }
-
-        boolean hasNextBatch = true;
-
-        while (minPosition != null && hasNextBatch) {
-            log.info("Fetching next batch for " + minPosition);
-
-            JSONObject nextBatchJson = getNextHomeFollowersBatchJson(configParams.getHomeAccount(), minPosition);
-            if (nextBatchJson == null) {
-                // Probably 429 - Too many requests
-                return;
-            }
-            minPosition = extractMinPositionFromJson(nextBatchJson);
-
-            body = extractHtmlFromJson(nextBatchJson);
-
-            rawProfileCards = extractProfileCardsFromHtml(body);
-            log.info("Next batch size: " + rawProfileCards.size());
-
-            success = unfollow(rawProfileCards);
-            if (!success) {
-                return;
-            }
-
-            if (rawProfileCards.size() == 0) {
-                hasNextBatch = false;
-            }
-
-            sleep(waitBetweenNextPageFetchSeconds);
-        }
-
+        execute(configParams.getHomeAccount(), waitBetweenNextPageFetchSeconds);
     }
 
-    protected JSONObject getNextHomeFollowersBatchJson(String account, String minPosition) {
+    public JSONObject getNextAccountFollowersBatchJson(String account, String minPosition) {
         HttpHeaders headers = headerService.getNextHomeFollowerBatchJsonHeaders();
         return requestJson(
                 headers,
@@ -88,28 +48,7 @@ public class UnfollowService extends AbstractFollowService {
         );
     }
 
-    private List<RawProfileCard> extractProfileCardsFromHtml(Element parent) {
-        List<RawProfileCard> out = new ArrayList<>();
-        Elements profileCards = parent.select("div.ProfileCard.js-actionable-user");
-        for (Element profileCard : profileCards) {
-            Element actionButtonElement = profileCard.select("div.user-actions.btn-group").get(0);
-            boolean following = false;
-            if (actionButtonElement.hasClass("following")) {
-                following = true;
-            }
-            if (actionButtonElement.hasClass("pending")) {
-                following = true;
-            }
-            String name = profileCard.attr("data-screen-name");
-            String userId = profileCard.attr("data-user-id");
-            RawProfileCard rawProfileCardObj = new RawProfileCard(name, userId, following);
-            out.add(rawProfileCardObj);
-        }
-        return out;
-    }
-
-
-    private boolean unfollow(List<RawProfileCard> rawProfileCards) {
+    public boolean followList(List<RawProfileCard> rawProfileCards) {
         for (RawProfileCard rawProfileCard : rawProfileCards) {
             Followed followed = followPersistenceService.findByExternalId(rawProfileCard.getUserId());
             boolean shouldUnfollow = shouldUnfollow(followed);
@@ -149,7 +88,27 @@ public class UnfollowService extends AbstractFollowService {
         return true;
     }
 
-    private Element getHomeFollowersPageHtml() {
+    public List<RawProfileCard> extractProfileCardsFromHtml(Element parent) {
+        List<RawProfileCard> out = new ArrayList<>();
+        Elements profileCards = parent.select("div.ProfileCard.js-actionable-user");
+        for (Element profileCard : profileCards) {
+            Element actionButtonElement = profileCard.select("div.user-actions.btn-group").get(0);
+            boolean following = false;
+            if (actionButtonElement.hasClass("following")) {
+                following = true;
+            }
+            if (actionButtonElement.hasClass("pending")) {
+                following = true;
+            }
+            String name = profileCard.attr("data-screen-name");
+            String userId = profileCard.attr("data-user-id");
+            RawProfileCard rawProfileCardObj = new RawProfileCard(name, userId, following);
+            out.add(rawProfileCardObj);
+        }
+        return out;
+    }
+
+    public Element getAccountFollowersPageHtml(String account) {
         HttpHeaders headers = headerService.getHomeFollowersPageHtmlHeaders();
         return requestElement(
                 headers,

@@ -26,6 +26,7 @@ public class FollowService extends AbstractFollowService {
     private ConfigParams configParams;
 
     private double waitBetweenFollowsSeconds = 1.5;
+    protected double waitBetweenNextPageFetchSeconds = 1;
 
     @Autowired
     public FollowService(
@@ -39,45 +40,7 @@ public class FollowService extends AbstractFollowService {
     }
 
     public void execute(String account) {
-        Element body = getAccountFollowersPageHtml(account);
-        String minPosition = extractMinPositionFromHtml(body);
-
-        List<RawProfileCard> rawProfileCards = extractProfileCardsFromHtml(body);
-        log.info("First batch size: " + rawProfileCards.size());
-
-        boolean success = follow(rawProfileCards);
-        if (!success) {
-            return;
-        }
-
-        boolean hasNextBatch = true;
-
-        while (minPosition != null && hasNextBatch) {
-            log.info("Fetching next batch for " + minPosition);
-
-            JSONObject nextBatchJson = getNextAccountFollowersBatchJson(account, minPosition);
-            if (nextBatchJson == null) {
-                // Probably 429 - Too many requests
-                return;
-            }
-            minPosition = extractMinPositionFromJson(nextBatchJson);
-
-            body = extractHtmlFromJson(nextBatchJson);
-
-            rawProfileCards = extractProfileCardsFromHtml(body);
-            log.info("Next batch size: " + rawProfileCards.size());
-
-            success = follow(rawProfileCards);
-            if (!success) {
-                return;
-            }
-
-            if (rawProfileCards.size() == 0) {
-                hasNextBatch = false;
-            }
-
-            sleep(waitBetweenNextPageFetchSeconds);
-        }
+        execute(account, waitBetweenNextPageFetchSeconds);
     }
 
     public int getCurrentlyFollowing() {
@@ -98,7 +61,7 @@ public class FollowService extends AbstractFollowService {
         return 0;
     }
 
-    protected JSONObject getNextAccountFollowersBatchJson(String account, String minPosition) {
+    public JSONObject getNextAccountFollowersBatchJson(String account, String minPosition) {
         HttpHeaders headers = headerService.getNextFollowerBatchJsonHeaders(account);
         return requestJson(
                 headers,
@@ -106,15 +69,7 @@ public class FollowService extends AbstractFollowService {
         );
     }
 
-    private Element getAccountFollowersPageHtml(String account) {
-        HttpHeaders headers = headerService.getAccountFollowersPageHtmlHeaders(account);
-        return requestElement(
-                headers,
-                String.format("https://twitter.com/%s/followers", account)
-        );
-    }
-
-    private List<RawProfileCard> extractProfileCardsFromHtml(Element parent) {
+    public List<RawProfileCard> extractProfileCardsFromHtml(Element parent) {
         List<RawProfileCard> out = new ArrayList<>();
         Elements profileCards = parent.select("div.ProfileCard.js-actionable-user");
         for (Element profileCard : profileCards) {
@@ -154,7 +109,7 @@ public class FollowService extends AbstractFollowService {
         return true;
     }
 
-    private boolean follow(List<RawProfileCard> rawProfileCards) {
+    public boolean followList(List<RawProfileCard> rawProfileCards) {
         for (RawProfileCard rawProfileCard : rawProfileCards) {
             if (!rawProfileCard.isFollowing()) {
                 Followed followed = followPersistenceService.findByExternalId(rawProfileCard.getUserId());
@@ -172,6 +127,14 @@ public class FollowService extends AbstractFollowService {
             }
         }
         return true;
+    }
+
+    public Element getAccountFollowersPageHtml(String account) {
+        HttpHeaders headers = headerService.getAccountFollowersPageHtmlHeaders(account);
+        return requestElement(
+                headers,
+                String.format("https://twitter.com/%s/followers", account)
+        );
     }
 
     private boolean follow(String userId) {
