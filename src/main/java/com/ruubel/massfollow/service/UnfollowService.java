@@ -62,15 +62,9 @@ public class UnfollowService extends AbstractFollowService {
                 // Probably 429 - Too many requests
                 return;
             }
-            boolean hasMinPosition = nextBatchJson.has("min_position");
-            if (hasMinPosition) {
-                minPosition = nextBatchJson.getString("min_position");
-            } else {
-                minPosition = null;
-            }
+            minPosition = extractMinPositionFromJson(nextBatchJson);
 
-            String itemsHtml = nextBatchJson.getString("items_html");
-            body = Jsoup.parse(itemsHtml).body();
+            body = extractHtmlFromJson(nextBatchJson);
 
             rawProfileCards = extractProfileCardsFromHtml(body);
             log.info("Next batch size: " + rawProfileCards.size());

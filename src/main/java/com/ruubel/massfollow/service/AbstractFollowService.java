@@ -32,7 +32,7 @@ abstract class AbstractFollowService {
     }
 
     /**
-     * Extract the minPosition for pagination
+     * Extract the minPosition for pagination from HTML
      */
     protected String extractMinPositionFromHtml(Element body) {
         Elements gridTimelineItemss = body.select("div.GridTimeline-items");
@@ -42,6 +42,28 @@ abstract class AbstractFollowService {
             return minPosition;
         }
         return null;
+    }
+
+    /**
+     * Extract the minPosition for pagination from JSON
+     */
+    protected String extractMinPositionFromJson(JSONObject json) {
+        if (json.has("min_position")) {
+            return json.getString("min_position");
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Extract and parse the HTML property from the JSON
+     */
+    protected Element extractHtmlFromJson(JSONObject json) {
+        if (json.has("items_html")) {
+            return Jsoup.parse(json.getString("items_html"));
+        } else {
+            return null;
+        }
     }
 
     /**

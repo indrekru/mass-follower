@@ -46,7 +46,6 @@ public class FollowService extends AbstractFollowService {
         List<RawProfileCard> rawProfileCards = extractProfileCardsFromHtml(body);
 
         log.info("First batch size: " + rawProfileCards.size());
-        log.info(rawProfileCards.toString());
 
         boolean success = follow(rawProfileCards);
         if (!success) {
@@ -60,15 +59,9 @@ public class FollowService extends AbstractFollowService {
                 // Probably 429 - Too many requests
                 return;
             }
-            boolean hasMinPosition = nextBatchJson.has("min_position");
-            if (hasMinPosition) {
-                minPosition = nextBatchJson.getString("min_position");
-            } else {
-                minPosition = null;
-            }
+            minPosition = extractMinPositionFromJson(nextBatchJson);
 
-            String itemsHtml = nextBatchJson.getString("items_html");
-            body = Jsoup.parse(itemsHtml).body();
+            body = extractHtmlFromJson(nextBatchJson);
 
             rawProfileCards = extractProfileCardsFromHtml(body);
             log.info("Next batch size: " + rawProfileCards.size());
@@ -150,7 +143,7 @@ public class FollowService extends AbstractFollowService {
     }
 
     private boolean attemptFollowAndSleep(String name, String userId) {
-        log.info("Trying to follow " + name + "(ID:" + userId + ")");
+        log.info(String.format("Trying to follow '%s' (ID: %s)", name, userId));
         boolean success = follow(userId);
         if (!success) {
             log.warn("Failed follow. Abort");
