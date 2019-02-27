@@ -95,9 +95,12 @@ public class FollowService extends AbstractFollowService {
 
         Document parsed = Jsoup.parse(response.getBody());
         Elements numberElements = parsed.select("span.ProfileNav-value");
-        Element followingElement = numberElements.get(1);
-        String followingCountStr = followingElement.attr("data-count");
-        return Integer.parseInt(followingCountStr);
+        if (numberElements.size() > 1) {
+            Element followingElement = numberElements.get(1);
+            String followingCountStr = followingElement.attr("data-count");
+            return Integer.parseInt(followingCountStr);
+        }
+        return 0;
     }
 
     protected JSONObject getNextAccountFollowersBatchJson(String account, String minPosition) {
