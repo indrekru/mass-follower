@@ -25,8 +25,8 @@ public class FollowService extends AbstractFollowService {
     private FollowPersistenceService followPersistenceService;
     private ConfigParams configParams;
 
-    private double waitBetweenFollowsSeconds = 1.5;
-    private double waitBetweenNextPageFetchSeconds = 1;
+    private double waitBetweenFollowsSeconds = 1;
+    private double waitBetweenNextPageFetchSeconds = 0.1;
 
     @Autowired
     public FollowService(
