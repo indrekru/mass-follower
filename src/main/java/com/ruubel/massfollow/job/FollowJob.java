@@ -24,7 +24,8 @@ public class FollowJob {
         this.unfollowService = unfollowService;
     }
 
-    @Scheduled(cron = "0 55 23 * * ?")
+//    @Scheduled(cron = "0 55 23 * * ?") // 23:59
+    @Scheduled(cron = "0 0 0/6 * * ?") // Every 3 hours
     public void execute() {
         // Initial state
         doLogic(0);
