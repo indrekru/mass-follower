@@ -73,8 +73,10 @@ public class UnfollowService extends AbstractFollowService {
             } else {
                 return false;
             }
+        } else {
+            // Nothing in DB, so remove it
+            return true;
         }
-        return false;
     }
 
     private boolean attemptUnfollowAndSleep(String name, String userId) {

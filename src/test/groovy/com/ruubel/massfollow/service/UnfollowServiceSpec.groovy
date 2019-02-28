@@ -23,11 +23,11 @@ class UnfollowServiceSpec extends Specification {
         service = new UnfollowService(followedService, headersService, httpRequestService, configParams)
     }
 
-    def "when followed is null, then shouldUnfollow returns false" () {
+    def "when followed is null, then shouldUnfollow returns true" () {
         when:
             boolean shouldUnfollow = service.shouldUnfollow(null)
         then:
-            !shouldUnfollow
+            shouldUnfollow
     }
 
     def "when followed date is less that 2 days, then shouldUnfollow returns false" () {
