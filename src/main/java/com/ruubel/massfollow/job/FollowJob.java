@@ -25,7 +25,7 @@ public class FollowJob {
     }
 
 //    @Scheduled(cron = "0 55 23 * * ?") // 23:59
-    @Scheduled(cron = "0 0 0/6 * * ?") // Every 6 hours
+    @Scheduled(cron = "0 0 0/3 * * ?") // Every 3 hours
     public void execute() {
         // Initial state
         doLogic(0);
