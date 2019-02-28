@@ -99,7 +99,7 @@ abstract class AbstractFollowService implements FollowStrategy {
         );
 
         int statusCode = response.getStatusCode();
-        log.warn(String.format("%s : %s", statusCode, response.getBody()));
+        log.warn(String.format("Response: %s", statusCode));
 
         if (statusCode == 403) {
             JSONObject responseObj;
