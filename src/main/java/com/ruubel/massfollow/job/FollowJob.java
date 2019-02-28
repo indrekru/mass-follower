@@ -59,6 +59,18 @@ public class FollowJob {
             add("HSBC");
             add("AskLloydsBank");
             add("WesternUnion");
+            add("BarackObama");
+            add("TheEllenShow");
+            add("realDonaldTrump");
+            add("BillGates");
+            add("elonmusk");
+            add("nytimes");
+            add("NASA");
+            add("ReformedBroker");
+            add("TheStalwart");
+            add("ritholtz");
+            add("StockCats");
+            add("awealthofcs");
         }};
 
         Random random = new Random();
