@@ -88,6 +88,35 @@ mvn spring-boot:run
 
 And now if all went well, watch the terminal spit out logs as it's doing its magic.
 
+## In production
+
+This is project is currently in production.
+
+### Health
+
+https://mass-follower1.herokuapp.com/api/v1/health
+
+### All followed records:
+
+https://mass-follower1.herokuapp.com/api/v1/followed
+
+### Commands
+
+Deploy new version:
+```
+git push heroku master
+```
+
+Check logs:
+```
+heroku logs -tail -a mass-follower1
+```
+
+Restart:
+```
+heroku restart -a mass-follower1
+```
+
 ## Built With
 
 * [Spring Boot](https://spring.io/projects/spring-boot) - Spring Boot 2
