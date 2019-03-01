@@ -5,6 +5,7 @@ import com.ruubel.massfollow.model.Followed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -27,5 +28,13 @@ public class FollowPersistenceService {
 
     public List<Followed> findAll() {
         return followedRepository.findAll();
+    }
+
+    public List<Followed> findByFollowedLessThan(Instant then) {
+        return followedRepository.findByFollowedLessThan(then);
+    }
+
+    public void delete(Followed followed) {
+        followedRepository.delete(followed);
     }
 }
