@@ -8,6 +8,7 @@ It will decide either to follow or unfollow a bunch of people, depending how man
 If this thing runs on a scheduler every day, ideally your follower amount should grow.
 
 It keeps track of followed/unfollowed users via HSQLDB local file storage database. Make sure the app can create a directory named `db` in the root directory and create/modify files inside it.
+Also runs a cleanup job every day to clean up more than 3 months old entries, otherwise wouldn't be sustainable to store a DB in a xml file.
 
 ## Getting Started
 
