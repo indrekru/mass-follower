@@ -1,6 +1,7 @@
 package com.ruubel.massfollow.job;
 
 import com.ruubel.massfollow.service.FollowService;
+import com.ruubel.massfollow.service.FollowingAmountService;
 import com.ruubel.massfollow.service.UnfollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,23 +18,28 @@ public class FollowJob {
 
     private FollowService followService;
     private UnfollowService unfollowService;
+    private FollowingAmountService followingAmountService;
 
     @Autowired
-    public FollowJob(FollowService followService, UnfollowService unfollowService) {
+    public FollowJob(FollowService followService, UnfollowService unfollowService, FollowingAmountService followingAmountService) {
         this.followService = followService;
         this.unfollowService = unfollowService;
+        this.followingAmountService = followingAmountService;
     }
 
 //    @Scheduled(cron = "0 55 23 * * ?") // 23:59
     @Scheduled(cron = "0 0 0/6 * * ?") // Every 6 hours
     public void execute() {
+        // Track current following
+        long currentlyFollowing = followService.getCurrentlyFollowing();
+        followingAmountService.saveFollowingAmount(currentlyFollowing);
         // Initial state
         doLogic(0);
         log.info("Finished, done for today");
     }
 
     private void doLogic(int unfollowTimes) {
-        int currentlyFollowing = followService.getCurrentlyFollowing();
+        long currentlyFollowing = followService.getCurrentlyFollowing();
         if (currentlyFollowing < 3500) {
             log.info("Do following");
             doFollows();

@@ -43,7 +43,7 @@ public class FollowService extends AbstractFollowService {
         execute(account, waitBetweenNextPageFetchSeconds);
     }
 
-    public int getCurrentlyFollowing() {
+    public long getCurrentlyFollowing() {
         HttpResponse response = httpRequestService.exchange(
                 String.format("https://twitter.com/%s", configParams.getHomeAccount()),
                 Connection.Method.GET,
@@ -55,7 +55,7 @@ public class FollowService extends AbstractFollowService {
         if (numberElements.size() > 1) {
             Element followingElement = numberElements.get(1);
             String followingCountStr = followingElement.attr("data-count");
-            return Integer.parseInt(followingCountStr);
+            return Long.parseLong(followingCountStr);
         }
         log.warn("Failed to fetch the HTML for following");
         return 0;

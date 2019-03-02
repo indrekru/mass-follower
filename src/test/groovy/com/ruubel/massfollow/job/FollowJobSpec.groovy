@@ -1,6 +1,7 @@
 package com.ruubel.massfollow.job
 
 import com.ruubel.massfollow.service.FollowService
+import com.ruubel.massfollow.service.FollowingAmountService
 import com.ruubel.massfollow.service.UnfollowService
 import spock.lang.Specification
 
@@ -9,11 +10,13 @@ class FollowJobSpec extends Specification {
     FollowJob job
     FollowService followService
     UnfollowService unfollowService
+    FollowingAmountService followingAmountService
 
     def setup () {
         followService = Mock(FollowService)
         unfollowService = Mock(UnfollowService)
-        job = new FollowJob(followService, unfollowService)
+        followingAmountService = Mock(FollowingAmountService)
+        job = new FollowJob(followService, unfollowService, followingAmountService)
     }
 
     def "when following less than 3500, then runs only follow once" () {
