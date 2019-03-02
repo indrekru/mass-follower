@@ -16,13 +16,13 @@ class FollowJobSpec extends Specification {
         job = new FollowJob(followService, unfollowService)
     }
 
-    def "when following less than 3500, then runs follow and unfollow once" () {
+    def "when following less than 3500, then runs only follow once" () {
         when:
             job.doLogic(0)
         then:
             1 * followService.getCurrentlyFollowing() >> 3499
             1 * followService.execute(_)
-            1 * unfollowService.execute()
+            0 * unfollowService.execute()
 
     }
 

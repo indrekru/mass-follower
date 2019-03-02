@@ -35,15 +35,10 @@ public class FollowJob {
     private void doLogic(int unfollowTimes) {
         int currentlyFollowing = followService.getCurrentlyFollowing();
         if (currentlyFollowing < 3500) {
-            log.info("Do following first");
+            log.info("Do following");
             doFollows();
-            if (unfollowTimes == 0) {
-                // Hasn't unfollowed yet
-                log.info("Doing unfollows, haven't done them yet");
-                doUnfollows();
-            }
         } else {
-            log.info("Do unfollowing first");
+            log.info("Do unfollowing");
             if (unfollowTimes > 0) {
                 log.info("Have done unfollows already, quit");
                 return;
