@@ -101,6 +101,10 @@ https://mass-follower1.herokuapp.com/api/v1/health
 
 https://mass-follower1.herokuapp.com/api/v1/followed
 
+### Follower stats:
+
+https://mass-follower1.herokuapp.com/api/v1/follow-stats
+
 ### Commands
 
 Deploy new version:
