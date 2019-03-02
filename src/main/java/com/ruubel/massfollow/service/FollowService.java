@@ -43,17 +43,33 @@ public class FollowService extends AbstractFollowService {
         execute(account, waitBetweenNextPageFetchSeconds);
     }
 
-    public long getCurrentlyFollowing() {
-        HttpResponse response = httpRequestService.exchange(
+    private HttpResponse fetchHomepage() {
+        return httpRequestService.exchange(
                 String.format("https://twitter.com/%s", configParams.getHomeAccount()),
                 Connection.Method.GET,
                 new HttpHeaders(),
                 new HashMap<>());
+    }
 
+    public long getCurrentlyFollowing() {
+        HttpResponse response = fetchHomepage();
         Document parsed = Jsoup.parse(response.getBody());
         Elements numberElements = parsed.select("span.ProfileNav-value");
         if (numberElements.size() > 1) {
             Element followingElement = numberElements.get(1);
+            String followingCountStr = followingElement.attr("data-count");
+            return Long.parseLong(followingCountStr);
+        }
+        log.warn("Failed to fetch the HTML for following");
+        return 0;
+    }
+
+    public long getCurrentFollowers() {
+        HttpResponse response = fetchHomepage();
+        Document parsed = Jsoup.parse(response.getBody());
+        Elements numberElements = parsed.select("span.ProfileNav-value");
+        if (numberElements.size() > 2) {
+            Element followingElement = numberElements.get(2);
             String followingCountStr = followingElement.attr("data-count");
             return Long.parseLong(followingCountStr);
         }

@@ -102,7 +102,7 @@ class FollowServiceSpec extends Specification {
         given:
             HttpResponse response = new HttpResponse(500, "exception")
         when:
-            int following = service.getCurrentlyFollowing()
+            long following = service.getCurrentlyFollowing()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
             following == 0
@@ -112,7 +112,7 @@ class FollowServiceSpec extends Specification {
         given:
             HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span>")
         when:
-            int following = service.getCurrentlyFollowing()
+            long following = service.getCurrentlyFollowing()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
             following == 0
@@ -122,10 +122,44 @@ class FollowServiceSpec extends Specification {
         given:
             HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span><span class=\"ProfileNav-value\" data-count=\"699\"></span>")
         when:
-            int following = service.getCurrentlyFollowing()
+            long following = service.getCurrentlyFollowing()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
             following == 699
+    }
+
+
+
+
+
+    def "when fetching followers and fails to connect, then returns 0" () {
+        given:
+            HttpResponse response = new HttpResponse(500, "exception")
+        when:
+            long following = service.getCurrentFollowers()
+        then:
+            1 * httpRequestService.exchange(_, _, _, _) >> response
+            following == 0
+    }
+
+    def "when fetches correct html for followers, but less elements than expected, then returns 0" () {
+        given:
+            HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span>")
+        when:
+            long following = service.getCurrentFollowers()
+        then:
+            1 * httpRequestService.exchange(_, _, _, _) >> response
+            following == 0
+    }
+
+    def "when fetches correct html fro followers, then returns expected number" () {
+        given:
+            HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span><span class=\"ProfileNav-value\" data-count=\"699\"></span><span class=\"ProfileNav-value\" data-count=\"3000\"></span>")
+        when:
+            long following = service.getCurrentFollowers()
+        then:
+            1 * httpRequestService.exchange(_, _, _, _) >> response
+            following == 3000
     }
 
 }
