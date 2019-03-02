@@ -7,8 +7,8 @@ This is a server-side twitter mass-follower + unfollower. It uses a scheduler an
 It will decide either to follow or unfollow a bunch of people, depending how many you are currently following. It unfollows people that have been followed for at least 2 days. It always needs to keep your current following number under 5000, otherwise - Twitter restrictions kick in.
 If this thing runs on a scheduler every day, ideally your follower amount should grow.
 
-It keeps track of followed/unfollowed users via HSQLDB local file storage database. Make sure the app can create a directory named `db` in the root directory and create/modify files inside it.
-Also runs a cleanup job every day to clean up more than 3 months old entries, otherwise wouldn't be sustainable to store a DB in a xml file.
+It keeps track of followed/unfollowed users in Postgres or HSQLDB local file storage database (depends what profile you run it with, default is postgres). In case of HSQLDB, run it with `-Dspring.profiles.active=hsql` and make sure the app can create a directory named `db` in the root directory and create/modify files inside it.
+Also runs a cleanup job every day to clean up more than 3 months old entries.
 
 ## Getting Started
 
