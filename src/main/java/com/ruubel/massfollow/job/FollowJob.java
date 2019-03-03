@@ -36,6 +36,9 @@ public class FollowJob {
 //    @Scheduled(cron = "0 55 23 * * ?") // 23:59
     @Scheduled(cron = "0 0 0/6 * * ?") // Every 6 hours
     public void execute() {
+        if (running) {
+            return;
+        }
         running = true;
         // Track current followers amount
         long currentlyFollowing = followService.getCurrentFollowers();
