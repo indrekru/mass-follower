@@ -61,7 +61,7 @@ public class ApiController {
         }
     }
 
-    @PostMapping("/job-status")
+    @GetMapping("/job-status")
     public ResponseEntity jobStatus() {
         boolean running = followJob.isRunning();
         return new ResponseEntity(new HashMap<String, Object>(){{
