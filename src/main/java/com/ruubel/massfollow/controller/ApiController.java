@@ -1,5 +1,6 @@
 package com.ruubel.massfollow.controller;
 
+import com.ruubel.massfollow.job.FollowJob;
 import com.ruubel.massfollow.model.Followed;
 import com.ruubel.massfollow.model.FollowingAmount;
 import com.ruubel.massfollow.service.FollowPersistenceService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,11 +23,13 @@ public class ApiController {
 
     private FollowPersistenceService followPersistenceService;
     private FollowingAmountService followingAmountService;
+    private FollowJob followJob;
 
     @Autowired
-    public ApiController(FollowPersistenceService followPersistenceService, FollowingAmountService followingAmountService) {
+    public ApiController(FollowPersistenceService followPersistenceService, FollowingAmountService followingAmountService, FollowJob followJob) {
         this.followPersistenceService = followPersistenceService;
         this.followingAmountService = followingAmountService;
+        this.followJob = followJob;
     }
 
     @GetMapping("/health")
@@ -45,5 +49,15 @@ public class ApiController {
     public ResponseEntity stats() {
         List<FollowingAmount> followingAmounts = followingAmountService.findAll();
         return new ResponseEntity<>(followingAmounts, HttpStatus.OK);
+    }
+
+    @PostMapping("/trigger")
+    public ResponseEntity trigger() {
+        boolean running = followJob.runAsync();
+        if (running) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
     }
 }

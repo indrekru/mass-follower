@@ -6,6 +6,7 @@ import com.ruubel.massfollow.service.UnfollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,23 +20,38 @@ public class FollowJob {
     private FollowService followService;
     private UnfollowService unfollowService;
     private FollowingAmountService followingAmountService;
+    private TaskExecutor taskExecutor;
+
+    private boolean running;
 
     @Autowired
-    public FollowJob(FollowService followService, UnfollowService unfollowService, FollowingAmountService followingAmountService) {
+    public FollowJob(FollowService followService, UnfollowService unfollowService, FollowingAmountService followingAmountService, TaskExecutor taskExecutor) {
         this.followService = followService;
         this.unfollowService = unfollowService;
         this.followingAmountService = followingAmountService;
+        this.taskExecutor = taskExecutor;
+        this.running = false;
     }
 
 //    @Scheduled(cron = "0 55 23 * * ?") // 23:59
     @Scheduled(cron = "0 0 0/6 * * ?") // Every 6 hours
     public void execute() {
+        running = true;
         // Track current followers amount
         long currentlyFollowing = followService.getCurrentFollowers();
         followingAmountService.saveFollowingAmount(currentlyFollowing);
         // Initial state
         doLogic(0);
         log.info("Finished, done for today");
+        running = false;
+    }
+
+    public boolean runAsync() {
+        if (running) {
+            return false;
+        }
+        taskExecutor.execute(() -> this.execute());
+        return true;
     }
 
     private void doLogic(int unfollowTimes) {

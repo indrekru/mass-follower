@@ -3,6 +3,7 @@ package com.ruubel.massfollow.job
 import com.ruubel.massfollow.service.FollowService
 import com.ruubel.massfollow.service.FollowingAmountService
 import com.ruubel.massfollow.service.UnfollowService
+import org.springframework.core.task.TaskExecutor
 import spock.lang.Specification
 
 class FollowJobSpec extends Specification {
@@ -11,12 +12,14 @@ class FollowJobSpec extends Specification {
     FollowService followService
     UnfollowService unfollowService
     FollowingAmountService followingAmountService
+    TaskExecutor taskExecutor
 
     def setup () {
         followService = Mock(FollowService)
         unfollowService = Mock(UnfollowService)
         followingAmountService = Mock(FollowingAmountService)
-        job = new FollowJob(followService, unfollowService, followingAmountService)
+        taskExecutor = Mock(TaskExecutor)
+        job = new FollowJob(followService, unfollowService, followingAmountService, taskExecutor)
     }
 
     def "when following less than 3500, then runs only follow once" () {
