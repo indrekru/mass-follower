@@ -128,10 +128,6 @@ class FollowServiceSpec extends Specification {
             following == 699
     }
 
-
-
-
-
     def "when fetching followers and fails to connect, then returns 0" () {
         given:
             HttpResponse response = new HttpResponse(500, "exception")
