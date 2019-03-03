@@ -4,6 +4,7 @@ import com.ruubel.massfollow.job.FollowJob;
 import com.ruubel.massfollow.model.Followed;
 import com.ruubel.massfollow.model.FollowingAmount;
 import com.ruubel.massfollow.service.FollowPersistenceService;
+import com.ruubel.massfollow.service.FollowService;
 import com.ruubel.massfollow.service.FollowingAmountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,18 @@ public class ApiController {
     private FollowPersistenceService followPersistenceService;
     private FollowingAmountService followingAmountService;
     private FollowJob followJob;
+    private FollowService followService;
 
     @Autowired
-    public ApiController(FollowPersistenceService followPersistenceService, FollowingAmountService followingAmountService, FollowJob followJob) {
+    public ApiController(
+            FollowPersistenceService followPersistenceService,
+            FollowingAmountService followingAmountService,
+            FollowJob followJob,
+            FollowService followService) {
         this.followPersistenceService = followPersistenceService;
         this.followingAmountService = followingAmountService;
         this.followJob = followJob;
+        this.followService = followService;
     }
 
     @GetMapping("/health")
@@ -67,5 +74,11 @@ public class ApiController {
         return new ResponseEntity(new HashMap<String, Object>(){{
             put("running", running);
         }}, HttpStatus.OK);
+    }
+
+    @PostMapping("/update-followers")
+    public ResponseEntity updateFollowers() {
+        followJob.updateFollowers();
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

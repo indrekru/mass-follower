@@ -61,6 +61,13 @@ public class FollowJob {
         return true;
     }
 
+    public void updateFollowers() {
+        taskExecutor.execute(() -> {
+            long currentlyFollowing = followService.getCurrentFollowers();
+            followingAmountService.saveFollowingAmount(currentlyFollowing);
+        });
+    }
+
     public boolean isRunning() {
         return running;
     }
