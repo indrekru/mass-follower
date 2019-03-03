@@ -54,6 +54,10 @@ public class FollowJob {
         return true;
     }
 
+    public boolean isRunning() {
+        return running;
+    }
+
     private void doLogic(int unfollowTimes) {
         long currentlyFollowing = followService.getCurrentlyFollowing();
         if (currentlyFollowing < 3500) {
