@@ -53,7 +53,11 @@ public class FollowJob {
         if (running) {
             return false;
         }
-        taskExecutor.execute(() -> this.execute());
+        running = true;
+        taskExecutor.execute(() -> {
+            this.doLogic(0);
+            running = false;
+        });
         return true;
     }
 
