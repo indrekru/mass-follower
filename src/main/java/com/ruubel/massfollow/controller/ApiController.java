@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,11 @@ public class ApiController {
 
     @PostMapping("/update-followers")
     public ResponseEntity updateFollowers() {
-        followJob.updateFollowers();
+        Instant past = Instant.now().minusSeconds(3600); // 2 hours
+        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThan(past);
+        if (followingAmounts.size() == 0) {
+            followJob.updateFollowers();
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 }
