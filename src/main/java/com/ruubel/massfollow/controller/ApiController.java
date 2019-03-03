@@ -79,7 +79,7 @@ public class ApiController {
 
     @PostMapping("/update-followers")
     public ResponseEntity updateFollowers() {
-        Instant past = Instant.now().minusSeconds(3600); // 2 hours
+        Instant past = Instant.now().minusSeconds(3600); // 1 hours
         List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThan(past);
         if (followingAmounts.size() == 0) {
             followJob.updateFollowers();
