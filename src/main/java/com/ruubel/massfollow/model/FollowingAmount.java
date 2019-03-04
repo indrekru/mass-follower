@@ -12,8 +12,11 @@ public class FollowingAmount {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "me_following")
+    private Long imFollowing;
+
     @Column(name = "following")
-    private Long following;
+    private Long myFollowers;
 
     @Column(name = "created")
     private Instant created;
@@ -21,8 +24,9 @@ public class FollowingAmount {
     public FollowingAmount() {
     }
 
-    public FollowingAmount(Long following) {
-        this.following = following;
+    public FollowingAmount(Long imFollowing, Long myFollowers) {
+        this.imFollowing = imFollowing;
+        this.myFollowers = myFollowers;
         this.created = Instant.now();
     }
 
@@ -30,8 +34,12 @@ public class FollowingAmount {
         return id;
     }
 
-    public Long getFollowing() {
-        return following;
+    public Long getImFollowing() {
+        return imFollowing;
+    }
+
+    public Long getMyFollowers() {
+        return myFollowers;
     }
 
     public Instant getCreated() {

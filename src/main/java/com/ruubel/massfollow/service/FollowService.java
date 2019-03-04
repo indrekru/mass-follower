@@ -51,7 +51,7 @@ public class FollowService extends AbstractFollowService {
                 new HashMap<>());
     }
 
-    public long getCurrentlyFollowing() {
+    public long getImFollowingAndMyFollowers() {
         HttpResponse response = fetchHomepage();
         Document parsed = Jsoup.parse(response.getBody());
         Elements numberElements = parsed.select("span.ProfileNav-value");
@@ -64,7 +64,7 @@ public class FollowService extends AbstractFollowService {
         return 0;
     }
 
-    public long getCurrentFollowers() {
+    public long getMyCurrentFollowers() {
         HttpResponse response = fetchHomepage();
         Document parsed = Jsoup.parse(response.getBody());
         Elements numberElements = parsed.select("span.ProfileNav-value");

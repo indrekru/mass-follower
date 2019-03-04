@@ -26,7 +26,7 @@ class FollowJobSpec extends Specification {
         when:
             job.doLogic(0)
         then:
-            1 * followService.getCurrentlyFollowing() >> 3499
+            1 * followService.getImFollowingAndMyFollowers() >> 3499
             1 * followService.execute(_)
             0 * unfollowService.execute()
 
@@ -36,7 +36,7 @@ class FollowJobSpec extends Specification {
         when:
             job.doLogic(0)
         then:
-            2 * followService.getCurrentlyFollowing() >> 3500
+            2 * followService.getImFollowingAndMyFollowers() >> 3500
             1 * unfollowService.execute()
             0 * followService.execute(_)
     }
@@ -45,8 +45,8 @@ class FollowJobSpec extends Specification {
         when:
             job.doLogic(0)
         then:
-            1 * followService.getCurrentlyFollowing() >> 3500
-            1 * followService.getCurrentlyFollowing() >> 3000
+            1 * followService.getImFollowingAndMyFollowers() >> 3500
+            1 * followService.getImFollowingAndMyFollowers() >> 3000
             1 * unfollowService.execute()
             1 * followService.execute(_)
     }

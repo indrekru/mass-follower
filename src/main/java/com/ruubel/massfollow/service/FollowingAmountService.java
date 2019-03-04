@@ -18,8 +18,8 @@ public class FollowingAmountService {
         this.followingAmountRepository = followingAmountRepository;
     }
 
-    public void saveFollowingAmount(long amount) {
-        FollowingAmount followingAmount = new FollowingAmount(amount);
+    public void saveFollowingAmounts(long imFollowing, long myFollowers) {
+        FollowingAmount followingAmount = new FollowingAmount(imFollowing, myFollowers);
         followingAmountRepository.save(followingAmount);
     }
 
