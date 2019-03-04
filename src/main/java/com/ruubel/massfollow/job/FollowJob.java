@@ -40,10 +40,10 @@ public class FollowJob {
             return;
         }
         running = true;
-        // Track current followers amount
-        updateMyCurrentFollowers();
         // Initial state
         doLogic(0);
+        // Update imFollowing and myFollowers
+        updateMyCurrentFollowers();
         log.info("Finished, done for today");
         running = false;
     }
@@ -61,9 +61,7 @@ public class FollowJob {
     }
 
     public void updateFollowers() {
-        taskExecutor.execute(() -> {
-            updateMyCurrentFollowers();
-        });
+        taskExecutor.execute(() -> updateMyCurrentFollowers());
     }
 
     public boolean isRunning() {
@@ -71,14 +69,13 @@ public class FollowJob {
     }
 
     private void updateMyCurrentFollowers() {
-        long myFollowers = followService.getMyCurrentFollowers();
-        long imFollowing = followService.getImFollowingAndMyFollowers();
-        followingAmountService.saveFollowingAmounts(imFollowing, myFollowers);
+        long[] followers = followService.getImFollowingAndMyFollowers();
+        followingAmountService.saveFollowingAmounts(followers[0], followers[1]);
     }
 
     private void doLogic(int unfollowTimes) {
-        long imFollowing = followService.getImFollowingAndMyFollowers();
-        if (imFollowing < 3500) {
+        long[] followers = followService.getImFollowingAndMyFollowers();
+        if (followers[0] < 3500) {
             log.info("Do following");
             doFollows();
         } else {

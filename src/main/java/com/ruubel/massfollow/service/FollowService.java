@@ -51,30 +51,33 @@ public class FollowService extends AbstractFollowService {
                 new HashMap<>());
     }
 
-    public long getImFollowingAndMyFollowers() {
+    public long[] getImFollowingAndMyFollowers() {
+        long[] followers = new long[2];
         HttpResponse response = fetchHomepage();
         Document parsed = Jsoup.parse(response.getBody());
-        Elements numberElements = parsed.select("span.ProfileNav-value");
-        if (numberElements.size() > 1) {
-            Element followingElement = numberElements.get(1);
-            String followingCountStr = followingElement.attr("data-count");
-            return Long.parseLong(followingCountStr);
-        }
-        log.warn("Failed to fetch the HTML for following");
-        return 0;
-    }
 
-    public long getMyCurrentFollowers() {
-        HttpResponse response = fetchHomepage();
-        Document parsed = Jsoup.parse(response.getBody());
-        Elements numberElements = parsed.select("span.ProfileNav-value");
-        if (numberElements.size() > 2) {
-            Element followingElement = numberElements.get(2);
-            String followingCountStr = followingElement.attr("data-count");
-            return Long.parseLong(followingCountStr);
+        Elements imFollowingElements = parsed.select("a.ProfileNav-stat[data-nav=\"following\"]");
+        Elements myFollowersElements = parsed.select("a.ProfileNav-stat[data-nav=\"followers\"]");
+
+        long imFollowing = 0;
+        long myFollowers = 0;
+
+        if (imFollowingElements.size() > 0) {
+            Element valueElement = imFollowingElements.get(0).select("span.ProfileNav-value").get(0);
+            String imFollowingStr = valueElement.attr("data-count");
+            imFollowing = Long.parseLong(imFollowingStr);
         }
-        log.warn("Failed to fetch the HTML for following");
-        return 0;
+
+        if (myFollowersElements.size() > 0) {
+            Element valueElement = myFollowersElements.get(0).select("span.ProfileNav-value").get(0);
+            String myFollowersStr = valueElement.attr("data-count");
+            myFollowers = Long.parseLong(myFollowersStr);
+        }
+
+        followers[0] = imFollowing;
+        followers[1] = myFollowers;
+
+        return followers;
     }
 
     public JSONObject getNextAccountFollowersBatchJson(String account, String minPosition) {

@@ -98,64 +98,90 @@ class FollowServiceSpec extends Specification {
             success
     }
 
-    def "when fails to connect, then returns 0" () {
+    def "when fails to connect, then returns [0, 0]" () {
         given:
             HttpResponse response = new HttpResponse(500, "exception")
         when:
-            long following = service.getImFollowingAndMyFollowers()
+            long[] following = service.getImFollowingAndMyFollowers()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
-            following == 0
+            following == [0, 0]
     }
 
-    def "when fetches correct html, but less elements than expected, then returns 0" () {
+    def "when fetches correct html, but no following element found, then returns 0" () {
         given:
-            HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span>")
+            HttpResponse response = new HttpResponse(200, "<a class=\"ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-openSignupDialog js-nonNavigable u-textUserColor\" data-nav=\"following-not\" href=\"/freenancefeed/following\" data-original-title=\"3,071 Following\">\n" +
+                    "          <span class=\"ProfileNav-label\" aria-hidden=\"true\">Following</span>\n" +
+                    "            <span class=\"u-hiddenVisually\">Following</span>\n" +
+                    "          <span class=\"ProfileNav-value\" data-count=\"3071\" data-is-compact=\"false\">3,071</span>\n" +
+                    "        </a>")
         when:
-            long following = service.getImFollowingAndMyFollowers()
+            long[] following = service.getImFollowingAndMyFollowers()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
-            following == 0
+            following == [0, 0]
     }
 
-    def "when fetches correct html, then returns expected number" () {
+    def "when fetches correct html, but no followers element found, then returns 0" () {
         given:
-            HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span><span class=\"ProfileNav-value\" data-count=\"699\"></span>")
+            HttpResponse response = new HttpResponse(200, "<a class=\"ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-openSignupDialog js-nonNavigable u-textUserColor\" data-nav=\"followers-not\" href=\"/freenancefeed/followers\" data-original-title=\"3,149 Followers\">\n" +
+                    "          <span class=\"ProfileNav-label\" aria-hidden=\"true\">Followers</span>\n" +
+                    "            <span class=\"u-hiddenVisually\">Followers</span>\n" +
+                    "          <span class=\"ProfileNav-value\" data-count=\"3149\" data-is-compact=\"false\">3,149</span>\n" +
+                    "        </a>")
         when:
-            long following = service.getImFollowingAndMyFollowers()
+            long[] following = service.getImFollowingAndMyFollowers()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
-            following == 699
+            following == [0, 0]
     }
 
-    def "when fetching followers and fails to connect, then returns 0" () {
+    def "when fetches correct html and following element found, then returns the number" () {
         given:
-            HttpResponse response = new HttpResponse(500, "exception")
+            HttpResponse response = new HttpResponse(200, "<a class=\"ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-openSignupDialog js-nonNavigable u-textUserColor\" data-nav=\"following\" href=\"/freenancefeed/following\" data-original-title=\"3,071 Following\">\n" +
+                "          <span class=\"ProfileNav-label\" aria-hidden=\"true\">Following</span>\n" +
+                "            <span class=\"u-hiddenVisually\">Following</span>\n" +
+                "          <span class=\"ProfileNav-value\" data-count=\"3071\" data-is-compact=\"false\">3,071</span>\n" +
+                "        </a>")
         when:
-            long following = service.getMyCurrentFollowers()
+            long[] following = service.getImFollowingAndMyFollowers()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
-            following == 0
+            following == [3071, 0]
     }
 
-    def "when fetches correct html for followers, but less elements than expected, then returns 0" () {
+    def "when fetches correct html and followers element found, then returns the number" () {
         given:
-            HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span>")
+            HttpResponse response = new HttpResponse(200, "<a class=\"ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-openSignupDialog js-nonNavigable u-textUserColor\" data-nav=\"followers\" href=\"/freenancefeed/followers\" data-original-title=\"3,149 Followers\">\n" +
+                "          <span class=\"ProfileNav-label\" aria-hidden=\"true\">Followers</span>\n" +
+                "            <span class=\"u-hiddenVisually\">Followers</span>\n" +
+                "          <span class=\"ProfileNav-value\" data-count=\"3149\" data-is-compact=\"false\">3,149</span>\n" +
+                "        </a>")
         when:
-            long following = service.getMyCurrentFollowers()
+            long[] following = service.getImFollowingAndMyFollowers()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
-            following == 0
+            following == [0, 3149]
     }
 
-    def "when fetches correct html fro followers, then returns expected number" () {
+    def "when fetches correct html and following and followers element found, then returns the numbers" () {
         given:
-            HttpResponse response = new HttpResponse(200, "<span class=\"ProfileNav-value\" data-count=\"200\"></span><span class=\"ProfileNav-value\" data-count=\"699\"></span><span class=\"ProfileNav-value\" data-count=\"3000\"></span>")
+            HttpResponse response = new HttpResponse(200,
+                    "<a class=\"ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-openSignupDialog js-nonNavigable u-textUserColor\" data-nav=\"following\" href=\"/freenancefeed/following\" data-original-title=\"3,071 Following\">\n" +
+                            "          <span class=\"ProfileNav-label\" aria-hidden=\"true\">Following</span>\n" +
+                            "            <span class=\"u-hiddenVisually\">Following</span>\n" +
+                            "          <span class=\"ProfileNav-value\" data-count=\"3071\" data-is-compact=\"false\">3,071</span>\n" +
+                            "        </a>" +
+                    "<a class=\"ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-openSignupDialog js-nonNavigable u-textUserColor\" data-nav=\"followers\" href=\"/freenancefeed/followers\" data-original-title=\"3,149 Followers\">\n" +
+                "          <span class=\"ProfileNav-label\" aria-hidden=\"true\">Followers</span>\n" +
+                "            <span class=\"u-hiddenVisually\">Followers</span>\n" +
+                "          <span class=\"ProfileNav-value\" data-count=\"3149\" data-is-compact=\"false\">3,149</span>\n" +
+                "        </a>")
         when:
-            long following = service.getMyCurrentFollowers()
+            long[] following = service.getImFollowingAndMyFollowers()
         then:
             1 * httpRequestService.exchange(_, _, _, _) >> response
-            following == 3000
+            following == [3071, 3149]
     }
 
 }
