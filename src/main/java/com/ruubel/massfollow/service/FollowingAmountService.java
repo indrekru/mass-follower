@@ -23,10 +23,6 @@ public class FollowingAmountService {
         followingAmountRepository.save(followingAmount);
     }
 
-    public List<FollowingAmount> findAll() {
-        return followingAmountRepository.findAll();
-    }
-
     public List<FollowingAmount> findByCreatedGreaterThan(Instant then) {
         return followingAmountRepository.findByCreatedGreaterThan(then);
     }

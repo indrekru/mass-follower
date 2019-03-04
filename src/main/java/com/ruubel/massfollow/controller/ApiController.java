@@ -55,7 +55,8 @@ public class ApiController {
 
     @GetMapping("/follow-stats")
     public ResponseEntity stats() {
-        List<FollowingAmount> followingAmounts = followingAmountService.findAll();
+        Instant then = Instant.now().minusSeconds(2592000); // 30 days
+        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThan(then);
         return new ResponseEntity<>(followingAmounts, HttpStatus.OK);
     }
 
