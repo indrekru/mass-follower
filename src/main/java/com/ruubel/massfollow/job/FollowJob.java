@@ -78,6 +78,9 @@ public class FollowJob {
         if (followers[0] < 3500) {
             log.info("Do following");
             doFollows();
+            if (unfollowTimes == 0) {
+                doUnfollows();
+            }
         } else {
             log.info("Do unfollowing");
             if (unfollowTimes > 0) {
