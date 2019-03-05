@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Component
@@ -16,24 +17,37 @@ public class CleanupJob {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private int limit;
+
     private FollowPersistenceService followPersistenceService;
 
     @Autowired
     public CleanupJob(FollowPersistenceService followPersistenceService) {
         this.followPersistenceService = followPersistenceService;
+        this.limit = 8500;
     }
 
     @Scheduled(cron = "0 55 23 * * ?")
-    public void cleanup() {
+    public List<Followed> cleanup() {
         log.info("Starting cleanup");
 
-        Instant then = Instant.now().minusSeconds(90 * 86400); // 3 months ago
-        List<Followed> olds = followPersistenceService.findByFollowedLessThan(then);
+        List<Followed> followedList = followPersistenceService.findAll();
 
-        for (Followed old : olds) {
-            followPersistenceService.delete(old);
+        if (followedList.size() > limit) {
+            int elementsToRemove = followedList.size() - limit;
+            Iterator<Followed> itr = followedList.iterator();
+            List<Followed> removeElements = new ArrayList<>();
+            int i = 0;
+            while (itr.hasNext() && i < elementsToRemove) {
+                Followed followed = itr.next();
+                followPersistenceService.delete(followed);
+                removeElements.add(followed);
+                i++;
+            }
+            followedList.removeAll(removeElements);
         }
 
         log.info("Done with the cleanup");
+        return followedList;
     }
 }
