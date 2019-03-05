@@ -108,6 +108,20 @@ public class FollowJob {
             add("ritholtz");
             add("StockCats");
             add("awealthofcs");
+            add("John_Hempton");
+            add("BarbarianCap");
+            add("muddywatersre");
+            add("Carl_C_Icahn");
+            add("herbgreenberg");
+            add("zerohedge");
+            add("pmarca");
+            add("WarrenBuffett");
+            add("business");
+            add("LendingClub");
+            add("Zopa");
+            add("RobinhoodApp");
+            add("RevolutApp");
+            add("monzo");
         }};
 
         Random random = new Random();
