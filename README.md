@@ -51,6 +51,12 @@ These instructions will get you a copy of the project up and running on your loc
        ```
        auth_token=whatever; ct0=whatever2;
        ```
+2b. If you run it with Postgres, you'll also need these environment variables:
+    ```
+   POSTGRES_URL
+   POSTGRES_USER
+   POSTGRES_PASSWORD
+   ```
 
 3. You need maven installed on your environment:
 
