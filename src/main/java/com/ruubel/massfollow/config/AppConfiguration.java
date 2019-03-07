@@ -38,7 +38,6 @@ public class AppConfiguration {
     @Bean
     public Rollbar rollbar() {
         Rollbar rollbar = Rollbar.init(withAccessToken("34cea2fc2be749e7a2ec60d066286f9f").build());
-        rollbar.log("Hello, Rollbar");
         return rollbar;
     }
 }
