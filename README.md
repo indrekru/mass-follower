@@ -10,6 +10,8 @@ If this thing runs on a scheduler every day, ideally your follower amount should
 It keeps track of followed/unfollowed users in Postgres or HSQLDB local file storage database (depends what profile you run it with, default is postgres). In case of HSQLDB, run it with `-Dspring.profiles.active=hsql` and make sure the app can create a directory named `db` in the root directory and create/modify files inside it.
 Also runs a cleanup job every day to remove older entries to keep followed table's DB row count below 8500, because heroku has 10000 DB row limit on free plan.
 
+I wrote a blog post about it: https://fintechify.wordpress.com/2019/03/06/twitter-mass-follower/
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See running for notes on how to run the project on a system.
