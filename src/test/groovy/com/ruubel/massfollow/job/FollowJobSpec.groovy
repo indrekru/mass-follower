@@ -28,7 +28,7 @@ class FollowJobSpec extends Specification {
         then:
             1 * followService.getImFollowingAndMyFollowers() >> [3499, 2000]
             1 * followService.execute(_)
-            1 * unfollowService.execute()
+//            1 * unfollowService.execute()
             1 * followService.getImFollowingAndMyFollowers() >> [3666, 2666]
             1 * followingAmountService.saveFollowingAmounts(3666, 2666)
     }
@@ -39,7 +39,7 @@ class FollowJobSpec extends Specification {
         then:
             1 * followService.getImFollowingAndMyFollowers() >> [3499, 2000]
             1 * followService.execute(_)
-            1 * unfollowService.execute()
+//            1 * unfollowService.execute()
     }
 
     def "when following returns more than 3500 twice, then gives up" () {
