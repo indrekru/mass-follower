@@ -27,7 +27,8 @@ public class CleanupJob {
         this.limit = 8500;
     }
 
-    @Scheduled(cron = "0 55 23 * * ?")
+//    @Scheduled(cron = "0 55 23 * * ?") // 23:59
+    @Scheduled(cron = "0 0 0/4 * * ?") // Every 4 hours
     public List<Followed> cleanup() {
         log.info("Starting cleanup");
 
