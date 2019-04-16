@@ -120,12 +120,20 @@ public class FollowJob {
             add("zerohedge");
             add("pmarca");
             add("WarrenBuffett");
-            add("business");
             add("LendingClub");
             add("Zopa");
             add("RobinhoodApp");
             add("RevolutApp");
             add("monzo");
+            add("imaginecurve");
+            add("starlingbank");
+            add("freetrade");
+            add("IBKR");
+            add("degiroeu");
+            add("GrantCardone");
+            add("theRealKiyosaki");
+            add("Citibank");
+            add("jpmorgan");
         }};
 
         Random random = new Random();
