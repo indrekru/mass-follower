@@ -30,9 +30,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Deploy Master to Heroku
+          name: Deploy to mass-follower
           command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+            git push https://heroku:$HEROKU_API_KEY_MASSFOLLOWER@git.heroku.com/$HEROKU_APP_NAME_MASSFOLLOWER.git master
+      - run:
+          name: Deploy to mass-follower1
+          command: |
+            git push https://heroku:$HEROKU_API_KEY_MASSFOLLOWER1@git.heroku.com/$HEROKU_APP_NAME_MASSFOLLOWER1.git master
 
 workflows:
   version: 2
