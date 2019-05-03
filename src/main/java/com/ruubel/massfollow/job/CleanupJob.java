@@ -28,7 +28,7 @@ public class CleanupJob {
     }
 
 //    @Scheduled(cron = "0 55 23 * * ?") // 23:59
-    @Scheduled(cron = "0 0 0/7 * * ?") // Every 7 hours
+    @Scheduled(cron = "0 0 0/3 * * ?") // Every 3 hours
     public List<Followed> cleanup() {
         log.info("Starting cleanup");
 
