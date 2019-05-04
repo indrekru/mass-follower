@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class CleanupJob {
+public class FollowedCleanupJob {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -22,7 +22,7 @@ public class CleanupJob {
     private FollowPersistenceService followPersistenceService;
 
     @Autowired
-    public CleanupJob(FollowPersistenceService followPersistenceService) {
+    public FollowedCleanupJob(FollowPersistenceService followPersistenceService) {
         this.followPersistenceService = followPersistenceService;
         this.limit = 8500;
     }

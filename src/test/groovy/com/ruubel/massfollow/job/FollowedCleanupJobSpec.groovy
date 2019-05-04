@@ -4,14 +4,14 @@ import com.ruubel.massfollow.model.Followed
 import com.ruubel.massfollow.service.FollowPersistenceService
 import spock.lang.Specification
 
-class CleanupJobSpec extends Specification {
+class FollowedCleanupJobSpec extends Specification {
 
-    CleanupJob cleanupJob
+    FollowedCleanupJob cleanupJob
     FollowPersistenceService followPersistenceService
 
     def setup () {
         followPersistenceService = Mock(FollowPersistenceService)
-        cleanupJob = new CleanupJob(followPersistenceService)
+        cleanupJob = new FollowedCleanupJob(followPersistenceService)
     }
 
     def "when limit is 2 and 6 elements found, then removes 4 and returns 2" () {

@@ -26,4 +26,12 @@ public class FollowingAmountService {
     public List<FollowingAmount> findByCreatedGreaterThan(Instant then) {
         return followingAmountRepository.findByCreatedGreaterThan(then);
     }
+
+    public List<FollowingAmount> findByCreatedLessThan(Instant then) {
+        return followingAmountRepository.findByCreatedLessThan(then);
+    }
+
+    public void delete(FollowingAmount followingAmount) {
+        followingAmountRepository.delete(followingAmount);
+    }
 }
