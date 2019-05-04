@@ -25,7 +25,7 @@ public class FollowStatsCleanupJob {
 
     @Scheduled(cron = "0 55 23 * * ?") // 23:55
     public void cleanup() {
-        log.info("Cleaning up follow stats");
+        log.info("Cleaning up follow stats older than 30 days");
         Instant then = Instant.now().minusSeconds(2592000); // 30 days ago
         List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedLessThan(then);
         for (FollowingAmount followingAmount : followingAmounts) {
