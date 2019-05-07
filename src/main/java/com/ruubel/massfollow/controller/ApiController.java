@@ -56,7 +56,7 @@ public class ApiController {
     @GetMapping("/follow-stats")
     public ResponseEntity stats() {
         Instant then = Instant.now().minusSeconds(2592000); // 30 days ago
-        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThan(then);
+        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThanOrderByCreatedAsc(then);
         return new ResponseEntity<>(followingAmounts, HttpStatus.OK);
     }
 
@@ -81,7 +81,7 @@ public class ApiController {
     @PostMapping("/update-followers")
     public ResponseEntity updateFollowers() {
         Instant past = Instant.now().minusSeconds(3600); // 1 hours
-        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThan(past);
+        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThanOrderByCreatedAsc(past);
         if (followingAmounts.size() == 0) {
             followJob.updateFollowers();
         }

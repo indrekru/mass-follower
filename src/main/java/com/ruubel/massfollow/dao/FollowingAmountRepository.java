@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface FollowingAmountRepository extends JpaRepository<FollowingAmount, Long> {
-    List<FollowingAmount> findByCreatedGreaterThan(Instant then);
-    List<FollowingAmount> findByCreatedLessThan(Instant then);
+    List<FollowingAmount> findByCreatedGreaterThanOrderByCreatedAsc(Instant then);
+    List<FollowingAmount> findByCreatedLessThanOrderByCreatedAsc(Instant then);
 }

@@ -23,12 +23,12 @@ public class FollowingAmountService {
         followingAmountRepository.save(followingAmount);
     }
 
-    public List<FollowingAmount> findByCreatedGreaterThan(Instant then) {
-        return followingAmountRepository.findByCreatedGreaterThan(then);
+    public List<FollowingAmount> findByCreatedGreaterThanOrderByCreatedAsc(Instant then) {
+        return followingAmountRepository.findByCreatedGreaterThanOrderByCreatedAsc(then);
     }
 
-    public List<FollowingAmount> findByCreatedLessThan(Instant then) {
-        return followingAmountRepository.findByCreatedLessThan(then);
+    public List<FollowingAmount> findByCreatedLessThanOrderByCreatedAsc(Instant then) {
+        return followingAmountRepository.findByCreatedLessThanOrderByCreatedAsc(then);
     }
 
     public void delete(FollowingAmount followingAmount) {

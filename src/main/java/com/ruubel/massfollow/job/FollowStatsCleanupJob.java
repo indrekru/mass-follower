@@ -27,7 +27,7 @@ public class FollowStatsCleanupJob {
     public void cleanup() {
         log.info("Cleaning up follow stats older than 30 days");
         Instant then = Instant.now().minusSeconds(2592000); // 30 days ago
-        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedLessThan(then);
+        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedLessThanOrderByCreatedAsc(then);
         for (FollowingAmount followingAmount : followingAmounts) {
             followingAmountService.delete(followingAmount);
         }
