@@ -3,7 +3,6 @@ package com.ruubel.massfollow.job
 import com.ruubel.massfollow.service.FollowService
 import com.ruubel.massfollow.service.FollowingAmountService
 import com.ruubel.massfollow.service.UnfollowService
-import org.springframework.core.task.TaskExecutor
 import spock.lang.Specification
 
 class FollowJobSpec extends Specification {
@@ -12,14 +11,12 @@ class FollowJobSpec extends Specification {
     FollowService followService
     UnfollowService unfollowService
     FollowingAmountService followingAmountService
-    TaskExecutor taskExecutor
 
     def setup () {
         followService = Mock(FollowService)
         unfollowService = Mock(UnfollowService)
         followingAmountService = Mock(FollowingAmountService)
-        taskExecutor = Mock(TaskExecutor)
-        job = new FollowJob(followService, unfollowService, followingAmountService, taskExecutor)
+        job = new FollowJob(followService, unfollowService, followingAmountService)
     }
 
     def "when execute is run and followers are done first, then after updates followers in DB" () {
