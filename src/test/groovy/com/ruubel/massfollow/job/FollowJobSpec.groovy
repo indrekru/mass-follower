@@ -67,7 +67,7 @@ class FollowJobSpec extends Specification {
         when:
             job.doLogic(0)
         then:
-            1 * followService.getImFollowingAndMyFollowers() >> [0, 2000]
+            2 * followService.getImFollowingAndMyFollowers() >> [0, 2000]
             1 * followService.execute(_)
             1 * mailingService.notifyRecaptchaBlock()
     }
