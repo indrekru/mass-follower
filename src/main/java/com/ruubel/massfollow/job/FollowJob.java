@@ -2,6 +2,7 @@ package com.ruubel.massfollow.job;
 
 import com.ruubel.massfollow.service.FollowService;
 import com.ruubel.massfollow.service.FollowingAmountService;
+import com.ruubel.massfollow.service.MailingService;
 import com.ruubel.massfollow.service.UnfollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +20,16 @@ public class FollowJob {
     private FollowService followService;
     private UnfollowService unfollowService;
     private FollowingAmountService followingAmountService;
+    private MailingService mailingService;
 
     private boolean running;
 
     @Autowired
-    public FollowJob(FollowService followService, UnfollowService unfollowService, FollowingAmountService followingAmountService) {
+    public FollowJob(FollowService followService, UnfollowService unfollowService, FollowingAmountService followingAmountService, MailingService mailingService) {
         this.followService = followService;
         this.unfollowService = unfollowService;
         this.followingAmountService = followingAmountService;
+        this.mailingService = mailingService;
         this.running = false;
     }
 
@@ -45,6 +48,7 @@ public class FollowJob {
         long myFollowers = followers[1];
         if (imFollowing == 0) {
             log.info("Account blocked with recaptcha, notify via email");
+            mailingService.notifyRecaptchaBlock();
         }
         updateMyCurrentFollowers(imFollowing, myFollowers);
         log.info("Finished, done for today");

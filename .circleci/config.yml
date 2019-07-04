@@ -24,6 +24,8 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
       # run tests!
       - run: mvn test
+      - store_test_results:
+          path: ./build/test-results
   deploy:
     docker:
       - image: buildpack-deps:trusty
