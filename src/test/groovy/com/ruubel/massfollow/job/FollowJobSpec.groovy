@@ -65,7 +65,7 @@ class FollowJobSpec extends Specification {
 
     def "when imFollowing returns 0, then it's recaptcha block and notifies via email" () {
         when:
-            job.doLogic(0)
+            job.execute()
         then:
             2 * followService.getImFollowingAndMyFollowers() >> [0, 2000]
             1 * followService.execute(_)
