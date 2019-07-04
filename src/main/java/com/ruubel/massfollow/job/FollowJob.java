@@ -6,7 +6,6 @@ import com.ruubel.massfollow.service.UnfollowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,16 +19,14 @@ public class FollowJob {
     private FollowService followService;
     private UnfollowService unfollowService;
     private FollowingAmountService followingAmountService;
-    private TaskExecutor taskExecutor;
 
     private boolean running;
 
     @Autowired
-    public FollowJob(FollowService followService, UnfollowService unfollowService, FollowingAmountService followingAmountService, TaskExecutor taskExecutor) {
+    public FollowJob(FollowService followService, UnfollowService unfollowService, FollowingAmountService followingAmountService) {
         this.followService = followService;
         this.unfollowService = unfollowService;
         this.followingAmountService = followingAmountService;
-        this.taskExecutor = taskExecutor;
         this.running = false;
     }
 
@@ -43,34 +40,23 @@ public class FollowJob {
         // Initial state
         doLogic(0);
         // Update imFollowing and myFollowers
-        updateMyCurrentFollowers();
+        long[] followers = followService.getImFollowingAndMyFollowers();
+        long imFollowing = followers[0];
+        long myFollowers = followers[1];
+        if (imFollowing == 0) {
+            log.info("Account blocked with recaptcha, notify via email");
+        }
+        updateMyCurrentFollowers(imFollowing, myFollowers);
         log.info("Finished, done for today");
         running = false;
-    }
-
-    public boolean runAsync() {
-        if (running) {
-            return false;
-        }
-        running = true;
-        taskExecutor.execute(() -> {
-            doLogic(0);
-            running = false;
-        });
-        return true;
-    }
-
-    public void updateFollowers() {
-        taskExecutor.execute(() -> updateMyCurrentFollowers());
     }
 
     public boolean isRunning() {
         return running;
     }
 
-    private void updateMyCurrentFollowers() {
-        long[] followers = followService.getImFollowingAndMyFollowers();
-        followingAmountService.saveFollowingAmounts(followers[0], followers[1]);
+    private void updateMyCurrentFollowers(long imFollowing, long myFollowers) {
+        followingAmountService.saveFollowingAmounts(imFollowing, myFollowers);
     }
 
     private void doLogic(int unfollowTimes) {

@@ -60,16 +60,6 @@ public class ApiController {
         return new ResponseEntity<>(followingAmounts, HttpStatus.OK);
     }
 
-    @PostMapping("/trigger")
-    public ResponseEntity trigger() {
-        boolean running = followJob.runAsync();
-        if (running) {
-            return new ResponseEntity(HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.CONFLICT);
-        }
-    }
-
     @GetMapping("/job-status")
     public ResponseEntity jobStatus() {
         boolean running = followJob.isRunning();
@@ -78,13 +68,4 @@ public class ApiController {
         }}, HttpStatus.OK);
     }
 
-    @PostMapping("/update-followers")
-    public ResponseEntity updateFollowers() {
-        Instant past = Instant.now().minusSeconds(3600); // 1 hours
-        List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedGreaterThanOrderByCreatedAsc(past);
-        if (followingAmounts.size() == 0) {
-            followJob.updateFollowers();
-        }
-        return new ResponseEntity(HttpStatus.OK);
-    }
 }
