@@ -26,14 +26,14 @@ public class FollowStatsCleanupJob {
     @Autowired
     public FollowStatsCleanupJob(FollowingAmountService followingAmountService) {
         this.followingAmountService = followingAmountService;
-        formatter = DateTimeFormatter.ofLocalizedDateTime( FormatStyle.MEDIUM )
+        formatter = DateTimeFormatter.ofPattern("dd-MM")
             .withLocale( Locale.UK )
             .withZone( ZoneId.systemDefault() );
     }
 
     @Scheduled(cron = "0 55 23 * * ?") // 23:55
     public void cleanup() {
-        log.info("Cleaning up follow stats older than 20 days");
+        log.info("Cleanup of old stats, leave last of the day");
 
         Instant then = Instant.now().minusSeconds(2592000); // 30 days ago
         List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedLessThanOrderByCreatedAsc(then);
