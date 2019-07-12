@@ -52,10 +52,10 @@ public class FollowStatsCleanupJob {
                 String currentDate = formatter.format(current.getCreated());
                 String nextDate = formatter.format(next.getCreated());
                 if (currentDate.equals(nextDate)) {
-                    log.info("Deleting: " + nextDate);
+                    log.info("Deleting: " + currentDate);
                     followingAmountService.delete(current);
                 } else {
-                    log.info("Skipping: " + nextDate);
+                    log.info("Skipping: " + currentDate);
                 }
             }
         }
