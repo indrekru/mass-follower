@@ -37,6 +37,7 @@ public class FollowStatsCleanupJob {
 
         Instant then = Instant.now().minusSeconds(2592000); // 30 days ago
         List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedLessThanOrderByCreatedAsc(then);
+        System.out.println("Found followStats: " + followingAmounts.size());
         for (int i = 0; i < followingAmounts.size(); i++){
             FollowingAmount current = followingAmounts.get(i);
             if (followingAmounts.size() > i + 1) {
