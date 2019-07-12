@@ -1,6 +1,7 @@
 package com.ruubel.massfollow;
 
 import com.ruubel.massfollow.job.FollowJob;
+import com.ruubel.massfollow.job.FollowStatsCleanupJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,9 @@ public class Application implements CommandLineRunner {
     @Autowired
     private FollowJob followJob;
 
+    @Autowired
+    private FollowStatsCleanupJob followStatsCleanupJob;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -21,6 +25,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... strings) {
         followJob.execute();
+        followStatsCleanupJob.cleanup();
     }
 
 }
