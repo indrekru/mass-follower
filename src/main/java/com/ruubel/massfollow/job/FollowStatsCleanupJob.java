@@ -39,12 +39,13 @@ public class FollowStatsCleanupJob {
         List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedLessThanOrderByCreatedAsc(then);
         for (int i = 0; i < followingAmounts.size(); i++){
             FollowingAmount current = followingAmounts.get(i);
-            FollowingAmount next;
             if (followingAmounts.size() > i + 1) {
-                next = followingAmounts.get(i + 1);
+                FollowingAmount next = followingAmounts.get(i + 1);
                 String currentDate = formatter.format(current.getCreated());
                 String nextDate = formatter.format(next.getCreated());
+                System.out.println(nextDate + " : " + currentDate);
                 if (currentDate.equals(nextDate)) {
+                    System.out.println("Deleting: " + nextDate);
                     followingAmountService.delete(current);
                 }
             }
