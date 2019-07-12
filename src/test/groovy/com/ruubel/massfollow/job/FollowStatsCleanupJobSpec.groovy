@@ -30,6 +30,7 @@ class FollowStatsCleanupJobSpec extends Specification {
         when:
             job.cleanup()
         then:
+            1 * followingAmountService.findByCreatedGreaterThanOrderByCreatedAsc(_) >> []
             1 * followingAmountService.findByCreatedLessThanOrderByCreatedAsc(_) >> list
             1 * followingAmountService.delete(list[0])
             1 * followingAmountService.delete(list[1])

@@ -33,21 +33,29 @@ public class FollowStatsCleanupJob {
 
     @Scheduled(cron = "0 55 23 * * ?") // 23:55
     public void cleanup() {
-        log.info("Cleanup of old stats, leave last of the day");
+        log.info("Clean up older than 30 days first");
 
         Instant then = Instant.now().minusSeconds(2592000); // 30 days ago
         List<FollowingAmount> followingAmounts = followingAmountService.findByCreatedLessThanOrderByCreatedAsc(then);
-        System.out.println("Found followStats: " + followingAmounts.size());
+        log.info("Found 30 days older: " + followingAmounts.size());
+        for (FollowingAmount followingAmount : followingAmounts) {
+            followingAmountService.delete(followingAmount);
+        }
+
+        followingAmounts = followingAmountService.findByCreatedGreaterThanOrderByCreatedAsc(then);
+
+        log.info("Found newer than 30 days: " + followingAmounts.size());
         for (int i = 0; i < followingAmounts.size(); i++){
             FollowingAmount current = followingAmounts.get(i);
             if (followingAmounts.size() > i + 1) {
                 FollowingAmount next = followingAmounts.get(i + 1);
                 String currentDate = formatter.format(current.getCreated());
                 String nextDate = formatter.format(next.getCreated());
-                System.out.println(nextDate + " : " + currentDate);
                 if (currentDate.equals(nextDate)) {
-                    System.out.println("Deleting: " + nextDate);
+                    log.info("Deleting: " + nextDate);
                     followingAmountService.delete(current);
+                } else {
+                    log.info("Skipping: " + nextDate);
                 }
             }
         }
