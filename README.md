@@ -53,7 +53,7 @@ These instructions will get you a copy of the project up and running on your loc
        ```
    * `TWITTER_COOKIE` - See your twitter cookie and extract 2 values:
        ```
-       auth_token=whatever; ct0=whatever2;
+       auth_token=whatever; ct0=same-as-x-csrf-token;
        ```
     #### If you run it with Postgres, you'll also need these environment variables:
 
