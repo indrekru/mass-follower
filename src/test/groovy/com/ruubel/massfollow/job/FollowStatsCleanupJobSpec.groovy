@@ -22,7 +22,7 @@ class FollowStatsCleanupJobSpec extends Specification {
             List<FollowingAmount> list = new ArrayList<FollowingAmount>(){{
                 add(new FollowingAmount(id: 1, created: Instant.now()))
                 add(new FollowingAmount(id: 2, created: Instant.now().plusSeconds(60)))
-                add(new FollowingAmount(id: 3, created: Instant.now().plusSeconds(70)))
+                add(new FollowingAmount(id: 3, created: Instant.now().plusSeconds(75)))
                 add(new FollowingAmount(id: 4, created: Instant.now().plus(1, ChronoUnit.DAYS)))
                 add(new FollowingAmount(id: 5, created: Instant.now().plus(1, ChronoUnit.DAYS).plusSeconds(60)))
                 add(new FollowingAmount(id: 6, created: Instant.now().plus(2, ChronoUnit.DAYS)))
