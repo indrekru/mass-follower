@@ -47,7 +47,7 @@ public class FollowJob {
         long imFollowing = followers[0];
         long myFollowers = followers[1];
         if (imFollowing == 0) {
-            log.info("Account blocked with recaptcha, notify via email");
+            log.info("Account blocked with recaptcha, notify");
             mailingService.notifyRecaptchaBlock();
         }
         updateMyCurrentFollowers(imFollowing, myFollowers);
