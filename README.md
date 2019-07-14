@@ -12,8 +12,6 @@ Also runs a cleanup job every day to remove older entries to keep followed table
 
 Interface to show progress: https://mass-follower.netlify.com/
 
-I wrote a blog post about it: https://fintechify.wordpress.com/2019/03/06/twitter-mass-follower/
-
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See running for notes on how to run the project on a system.
