@@ -43,6 +43,7 @@ public class FollowStatsCleanupJob {
 
         followingAmounts = followingAmountService.findByCreatedGreaterThanOrderByCreatedAsc(then);
 
+        log.info("Clean up newer than 30 days leaving only last entry per day");
         log.info("Found newer than 30 days: " + followingAmounts.size());
         for (int i = 0; i < followingAmounts.size(); i++){
             FollowingAmount current = followingAmounts.get(i);
