@@ -1,4 +1,6 @@
-# Twitter mass follow
+# Twitter mass follow (DEPRECATED)
+!! This stopped worked after twitter updated to their "new look".
+
 [![CircleCI](https://circleci.com/gh/indrekru/twitter-mass-follow.svg?style=svg)](https://circleci.com/gh/indrekru/twitter-mass-follow)
 
 <img src="https://raw.githubusercontent.com/indrekru/mass-follower/master/img.png" width="200px">
