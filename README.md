@@ -1,5 +1,5 @@
 # Twitter mass follow (DEPRECATED)
-!! This stopped worked after twitter updated to their "new look".
+!! This stopped working after twitter updated to their "new look".
 
 [![CircleCI](https://circleci.com/gh/indrekru/twitter-mass-follow.svg?style=svg)](https://circleci.com/gh/indrekru/twitter-mass-follow)
 
